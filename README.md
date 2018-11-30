@@ -47,7 +47,7 @@ folder: setup
 
 ### 关键字
 
-检索脚本使用页面标题，概要，和关键字检索相关的结果。确保你的关键字和你新增的页面页面相关。
+检索脚本使用页面标题，概要，和关键字检索相关的结果。确保你的关键字和你新增的页面相关。
 
 ### 标签(Tags)
 
@@ -88,31 +88,32 @@ link:file_name.html#tag[到内部页面的锚（anchors）的链接]
 image::directory/img.png[alt text]
 ```
 
-Do not add images into the root of the `images/` directory - either choose an existing sub-directory or create one if none of them fits the new image.
+不要把图片添加到目录`image/` 的根的下面 - 或者选择一个已有的子目录或者创建一个，如果没有适合新增加图片的。
 
-Images are sized automatically. You can provide a URL to a full-size image, as well as a caption and alt text:
+图片自动地设置大小。你可以提供一个全尺寸图片的url，和标题与替换文本：
 
 ```
-.Click to view a larger image
+.点击查看更大的图片
 [link=che/docs/images/devel/js_flow.png
 image::devel/js_flow.png[Alt text]
 ```
 
-Do not post too many images unless it is absolutely necessary. Animated `.gif` images are preferred, especially when explaining how to use complex UI features.
+不要上传太多的图片除非它是绝对需要的。`.gif`动画图片是好的选择，特别是当解释如何使用复杂的UI特性时。
 
-### Special characters
 
-To prevent special characters from being interpreted as formatting mark-up, use pass-through macros. For example, to escape underscores, asterisks, or backticks, use:
+### 特殊字符
+
+为避免特殊字符被解释为格式化的标记，可以使用通过(pass-through)宏。例如，为避免下划线，星号，或反引号，使用：
 
 ```
 pass:[VARIABLE_NAME__WITH__UNDERSCORES]
 ```
 
-## How to get support
+## 如何获得支持
 
-* **GitHub issue:** [open an issue](https://github.com/eclipse/che-docs/issues/new) in this repository
-* **Public Chat:** Join the public [eclipse-che](https://mattermost.eclipse.org/eclipse/channels/eclipse-che) Mattermost channel to talk to the community and contributors
+* **GitHub issue:** 在这个仓库中[打开问题](https://github.com/eclipse/che-docs/issues/new) 
+* **公共讨论:** 加入公共的 [eclipse-che](https://mattermost.eclipse.org/eclipse/channels/eclipse-che) Mattermost 通道与社区和贡献者交流
 
-## How to contribute
+## 如何做贡献
 
-We love pull requests and appreciate contributions that make docs more helpful for users. See the [Contribution guide](https://github.com/eclipse/che#contributing).
+我们喜欢拉取请求(pull request)和感谢能让文档对用户更有帮助的贡献。参见[贡献指南](https://github.com/eclipse/che#contributing)。
