@@ -1,33 +1,34 @@
-## Eclipse Che documentation
+## Eclipse Che 文档
 
-Che docs use Jekyll to convert `.adoc` (AsciiDoc) files into HTML pages. Docs are published at [https://www.eclipse.org/che/docs](https://www.eclipse.org/che/docs/). Updates are synced with a release cycle.
+通过Jekyll 把Che 文档从`.adoc` (AsciiDoc) 文件格式转换为HTML页面。文档被发布在 [https://www.eclipse.org/che/docs](https://www.eclipse.org/che/docs/)。 更新在一个发布周期内同步。
 
-## Build and preview
+## 构建和预览
 
-There is a `run.sh` script in the root of the repo that runs a Docker image, mounts sources, and starts Jekyll. When running locally, docs are available at `localhost:4000`. Jekyll watches for changes in `.adoc` files and re-generates resources, so you can preview changes live.
+在仓库的根路径下有一个名字是`run.sh`的脚本，它启动Docker镜像，挂载源文件，并启动Jekyll。当在本地运行时，通过地址 `localhost:4000`可以访问文档。Jekyll监视着文件的改变并重新生成相关资料，因此你能马上预览到所做的修改。
 
-### Building online
+### 在线构建
 [![Contribute](https://che.openshift.io/factory/resources/factory-contribute.svg)](https://che.openshift.io/f?id=factorycgpdptc6cjetbhr5)
 
-### Building natively
+### 原生地方式构建
 
-To build without using Docker, [install required Jekyll dependencies](https://jekyllrb.com/docs/installation/):
+在不用docker构建时， [安装必需的Jekyll依赖](https://jekyllrb.com/docs/installation/):
 
 ```
 # yum install maven ruby ruby-devel @development-tools
 ```
 
-Then, instead of the `run.sh` script, run Maven directly:
+然后，不再是运行`run.sh`,而改为直接地运行Maven:
 
 ```
 $ mvn clean install -Pnative
 ```
 
-## Adding a new page
+## 增加新页面
 
-In order to add a new page, create an `.adoc` file in `src/main/pages/che-<MAJOR-VERSION>/${subdir}` (substitute `<MAJOR-VERSION>` for either `6` or `7`, depending for which version of Che your content is intended).
+为增加一个新的页面，在`src/main/pages/che-<MAJOR-VERSION>/${subdir} `（视你的内容对应的版本，替代 `<MAJOR-VERSION>` 为`6`或`7`）下创建一个`.adoc` 文件。
 
-If there is no sub-directory that fits a new page, create one. Look at headers in existing pages to make sure the generated HTML page has the expected name, title, and keywords. For example:
+如果尚没有一个子目录对应于新的页面，就创建一个。查看已有的页面的页头以让生成的HTML页面有预期的名字，标题，和关键字。比如：
+
 
 ```yaml
 ---
@@ -40,47 +41,48 @@ folder: setup
 ---
 ```
 
-### Naming
+### 命名
 
-Try to use short names and titles for pages. Use dashes (`-`) in page names (`permalink` in page header).
+尽量为页面使用短的名字和标题。在页面名称(在页头中的`permalink` )中使用短的横线(`-`)。
 
-### Keywords
+### 关键字
 
-The search script uses page titles, summary, and keywords to search for relevant results. Make sure your keywords are relevant for the page you add.
+检索脚本使用页面标题，概要，和关键字检索相关的结果。确保你的关键字和你新增的页面页面相关。
 
-### Tags
+### 标签(Tags)
 
-To add a tag, look at available tags in `src/main/pages/che-<MAJOR-VERSION>/tags` folder. Tags should be also registered in `src/main/_data/tags.yml` - so both a tag in `tags.yml` and a respective tag page should be created.
+为增加一个新的标签，查阅在 `src/main/pages/che-<MAJOR-VERSION>/tags`中的可用的标签。标签也应该被注册到`src/main/_data/tags.yml`中 ---即标签需要同时在`tags.yml`和一个单独的tag页中创建。
 
-## Formatting and AsciiDoc syntax
+## 格式化和AsciiDoc语法
 
-See [AsciiDoc Writer's Guide](https://asciidoctor.org/docs/asciidoc-writers-guide/) for syntax and general help with AsciiDoc.
+关于AsciiDoc的语法和通用帮助，请参考 [AsciiDoc Writer's Guide](https://asciidoctor.org/docs/asciidoc-writers-guide/) .
 
-### Links
+### 链接(Links)
 
-To post a link to an internal page, use the following syntax:
-
-```
-This is a link:file_name.html[link to an internal page]
-```
-
-Do not use `.adoc` in the file name. Also, this file should be referenced in at least one sidebar-definition file in the `src/main/_data/sidebars/` directory.
-
-Links to anchors in internal pages:
+通过如下的语法，实现到内部页面的连接：
 
 ```
-link:file_name.html#tag[link to an anchor on an internal page]
+这是一个链接:file_name.html[到内部页面的链接]
 ```
 
-Links to external pages:
+不要在文件名字中使用`.adoc`。并且，新增的文件也应该至少在一个sidebar-definition文件中引用，sidebar-definition文件位于`src/main/_data/sidebars/`目录中。
+
+
+到内部页面的锚（anchors）的链接:
 
 ```
-This is a link:https://github.com[link to an external site]
+link:file_name.html#tag[到内部页面的锚（anchors）的链接]
 ```
 
-### Images
+到外部页面的链接：
 
-Images are located in the `src/main/che/docs/images/` directory. To publish an image, use the following syntax:
+```
+这是一个链接:https://github.com[到外部站点的链接]
+```
+
+### 图片文件
+
+图片文件位于`src/main/che/docs/images/`目录中。要发布图片文件，使用下面的语法：
 
 ```
 image::directory/img.png[alt text]
