@@ -30,28 +30,28 @@ Eclipse Che 提供:
 * https://che.openshift.io[创建可控的SaaS账户] (在che.openshift.io上)
 
 [id="single-and-multi-user-flavors"]
-== Single and Multi-User Flavors
+== 单用户和多用户模式Single and Multi-User Flavors
 
-Eclipse Che is available in two different modes:
+Eclipse Che有两种可用的方式：
 
-* *Single-user*: perfectly suited for personal desktop environment.
-* *Multi-user*: secure and best for organization and developer teams.
+* *单用户*: 特别适合于个人的桌面环境。
+* *多用户*: 对组织和开发团队更安全和适用。
 
-Learn more about single and multi-user flavors on the following link:single-multi-user.html[page].
+关于单用户和多用户的特点，可通过link:single-multi-user.html[页面]了解到.
 
-Considering the `multi-user` mode as an advanced setup of Eclipe Che, the quick starts are covering only the `single-user` mode. If you are interested by the `multi-user`, please read the following pages:
+鉴于`多用户`模式是高级的安装方式，在快速启动中仅包含了`单用户`模式。如果你对`多用户`模式感兴趣，请阅读下面的文档：
 
-* link:docker-multi-user.html[Multi-user configuration on Docker]
-* link:openshift-multi-user.html[Multi-user configuration on OpenShift]
+* link:docker-multi-user.html[在Docker上配置多用户]
+* link:openshift-multi-user.html[在OpenShift上配置多用户]
 
 [id="docker-and-openshift-support"]
-== Docker and OpenShift Support
+== Docker和OpenShift的支持
 
-Eclipse Che runs on different kind of infrastructure and container engine:
+Eclipse Che运行在多种类型的基础设施和容器引擎上：
 
 * link:infra-support.html[Docker]
 * link:infra-support.html[OpenShift]
-* Kubernetes (soon)
+* Kubernetes (马上..)
 
 Learn more about the different infrastructure supported by Eclipse Che on the following link:infra-support.html[page].
 
