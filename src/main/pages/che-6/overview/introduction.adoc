@@ -53,26 +53,26 @@ Eclipse Che运行在多种类型的基础设施和容器引擎上：
 * link:infra-support.html[OpenShift]
 * Kubernetes (马上..)
 
-Learn more about the different infrastructure supported by Eclipse Che on the following link:infra-support.html[page].
+要了解Eclipse Che所支持的不同基础设施，可以访问下面的link:infra-support.html[页面].
 
 [id="workspace-model"]
-== Workspace Model
+== 工作空间模型(Workspace Model)
 
 image::intro/intro-che-workspace.png[]
 
-Che defines the workspace to be the project code files and all of their dependencies necessary to edit, build, run, and debug them. In our world, we treat the IDE and the development runtime as a dependency of the workspace. These items are embedded and included with the workspace, whereever it may run. This compares to classic workspace definitions which may include the project code, but require the developer to bind their IDE and use their laptop localhost to provide a runtime.
+Che将工作区定义为项目代码文件以及编辑、构建、运行和调试这些文件所需的所有依赖项。在我们的世界里，我们将IDE和开发运行时视为工作空间的依赖项。这些项目被嵌入并包含在工作区中，在那里可以运行。与包含了项目代码的传统的工作空间相对应，传统工作空间要求开发人员绑定他们的IDE并使用他们的笔记本本地主机来提供运行时。
 
-Each workspace is isolated from one another and is responsible for managing the lifecycle of the components that are contained within it.
+每个工作空间彼此隔离，并负责管理包含在其中的组件的生命周期。
 
 image::intro/intro-workspace-runtimes.png[]
 
-A workspace contains one or more runtimes. The default runtime within our workspaces are Docker containers, but these runtimes can be replaced with other types of "machines" that offer different characteristics. We, for example, provide an SSH machine type and will soon provide localhost machines. The advantage of Docker as the runtime type allows users to define the contents of their runtime using Dockerfiles, for which we can then dynamically construct workspace runtimes without the user having to learn a lot of complex Docker syntax.
+工作空间包含一个或多个运行时。我们的工作空间中的默认运行时是Docker容器，但是这些运行时可以用提供不同特性的其他类型的“机器”替换。例如，我们提供SSH机器类型，并且很快将提供本地主机。Docker作为运行时类型的优点是允许用户使用Dockerfile定义运行时的内容，这样我们就可以动态地构造工作区运行时，而无需用户学习许多复杂的Docker语法。
 
 image::intro/intro-project-mounted.png[]
 
-A workspace can have 0..n projects, with each project mapping to 0..1 remote version control repositories such as git, subversion, or mercurial. Projects are mounted into the workspace, so that they are available both inside of the workspace and also available on long term storage. Each project has a "type", such as "maven", which when selected will activate a series of plugins that alter the behavior of the workspace to accommodate that project type. Projects can have different types and they can also have remodules which are sub-portions of a project that have their own typing and behaviors.
+工作空间可以有0..n个项目，每个项目映射到0..1个远程版本控制存储仓库，如git、subversion或mercurial。项目被安装到工作空间中，这样它们既在工作空间中可访问，也在长期存储中可访问。每个项目都有一个“类型”，比如“maven”，当类型被选择时，它将激活一系列插件，这些插件会改变工作空间的行为以适应项目类型。项目可以具有不同的类型，并且它们还可以具有重新组合，这些重新组合是具有它们自己的类型和行为的项目的子部分。
 
-Each workspace has its own private browser IDE hosted within it. The browser IDE provided by Che is packaged as JavaScript and CSS, but our IDE could be replaced with other IDEs. Since each workspace has its own server runtimes, each workspace can have a customized IDE with different plugins packaged within it.
+每个工作空间在其内部都有自己的私有浏览器IDE。Che提供的浏览器IDE打包为JavaScript和CSS，但是我们的IDE可以被其他IDE代替。因为每个工作空间都有自己的服务器运行时，所以每个工作空间都可以有一个定制的IDE，在其中打包了不同的插件。
 
 image::intro/intro-SSH-connect.png[]
 
