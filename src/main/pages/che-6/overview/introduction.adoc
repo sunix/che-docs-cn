@@ -1,33 +1,33 @@
 ---
-title: Introduction to Eclipse Che
-keywords: overview
-tags: [overview, getting-started]
+title: Eclipse Che介绍
+keywords: 概览
+tags: [概览, 入门, overview, getting-started]
 sidebar: che_6_docs
 permalink: che-6/index.html
 folder: che-6/overview
-summary: Eclipse Che is a developer workspace server and cloud IDE
+summary: Eclipse Che 是提供给开发者使用的工作空间服务器和云IDE
 ---
 
 [id="introduction"]
-== Introduction
+== 介绍
 
-Eclipse Che provides:
+Eclipse Che 提供:
 
-* Workspaces that include runtimes and IDEs
-* RESTful workspace server
-* A browser-based IDE
-* Plugins for languages, framework, and tools
-* An SDK for creating plugins and assemblies
+* 带有运行时和IDE的工作空间
+* RESTful 工作空间服务器
+* 基于浏览器的IDE
+* 为语言，框架及工具提供的插件(Plugins)
+* 可创建插件和程序集的SDK
 
 [id="getting-started"]
-== Getting Started
+== 开始
 
-You can get started with Che by:
+你可以通过下面的方式开始进入Che:
 
-* link:quick-start.html[Quick start guide]
-* Installing it on Docker: link:docker-single-user.html[Single-user] or link:docker-multi-user.html[Multi-user]
-* Installing it on OpenShift: link:openshift-single-user.html[Single-user] or link:openshift-multi-user.html[Multi-user]
-* https://che.openshift.io[Creating a hosted SaaS account] (at che.openshift.io)
+* link:quick-start.html[快速启动指南]
+* 在Docker上安装: link:docker-single-user.html[单用户] or link:docker-multi-user.html[多用户]
+* 在OpenShift上安装: link:openshift-single-user.html[单用户] or link:openshift-multi-user.html[多用户]
+* https://che.openshift.io[创建可控的SaaS账户] (在che.openshift.io上)
 
 [id="single-and-multi-user-flavors"]
 == Single and Multi-User Flavors
