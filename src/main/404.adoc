@@ -1,7 +1,7 @@
 ---
-title: "Page Not Found"
+title: "未找到页面"
 search: exclude
 sidebar: mydoc_sidebar
 ---
 
-Apologies. The page you were trying to view does not exist. If you believe this is a mistake, please, file an link:https://github.com/eclipse/che/issues[issue].
+抱歉！你想查看的页面已经不存在了。如果您确定这是一个错误，请在这里填写一个link:https://github.com/eclipse/che/issues[问题单].
