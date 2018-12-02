@@ -76,26 +76,26 @@ image::intro/intro-project-mounted.png[]
 
 image::intro/intro-SSH-connect.png[]
 
-By default, each workspace also configures its own SSH server. This allows remote clients and desktop IDEs to SSH mount into the workspace. By SSH mounting, you can let IDEs like IntelliJ or Eclipse work with the projects and runtimes contained within Che.
+默认情况下，每个工作空间也配置自己的SSH服务器。这允许远程客户端和桌面IDE将SSH连接到工作空间中。通过SSH连接，您可以让IntelliJ或Eclipse等IDE使用Che中包含的项目和运行时完成工作。
 
-Workspaces are hosted in the Che server, which is a lightweight runtime for managing workspaces. A single Che server can manage large volumes of workspaces, which themselves may or may not be running on the same host. Since Che workspace runtimes have their own runtimes, each workspace can be running on the same host or another host, managed by a docker daemon. The Che server is also a Docker container by default, which itself could be operated by compose or Swarm.
+工作空间托管在Che服务器中，这是一个用于管理工作空间的轻量级运行时。单个Che服务器可以管理大量工作空间，这些工作空间本身可以运行也可以不在同一主机上。因为Che工作空间的运行时有自己的运行时，所以每个工作区可以在同一个主机或另一个主机上运行，由一个docker守护进程管理。默认情况下，Che服务器也是一个Docker容器，它本身可以通过compose或Swarm进行操作。
 
 image::intro/intro-share-workspace.png[]
 
-Since the workspaces are servers that have their own runtimes, they are collaborative and shareable. This allows multiple users to access the same workspace at the same time. Each workspace has its own unique URL which allows multi-user access. We currently support multiple users within a single workspace on a last-write-wins policy. Before the end of 2016, we’ll have multi-cursor editing using an operational transform.
+由于工作空间是具有它们自己的运行时的服务器，因此它们是协作的和可共享的。这允许多个用户同时访问相同的工作空间。每个工作空间都有自己独特的URL，允许多用户访问。我们目前支持多个用户使用同一工作空间，采用最后写入获胜策略。在2016年底之前，我们将使用操作转换支持多光标编辑。
 
-Each workspace is defined with a JSON data model that contains the definition of its projects, its runtimes, its IDE, and other necessary information that allows a Che server to create replicas. This allows workspaces to move from one location to another, such as from one Che server to another Che server. You will never have the "but it runs on that computer" issue again. Workspaces can also have their internal state snapshot and saved in a registry, so replicas can be created from the original template, or from images that contain modifications made after a user started working with the workspace.
+每个工作空间都用JSON数据模型定义，该模型包含其项目、运行时、IDE和其他必要的信息的定义，这些信息允许Che服务器创建副本。这允许工作空间从一个位置移动到另一个位置，例如从一个Che服务器移动到另一个Che服务器。你永远不会有“但是它在那台电脑上运行”的问题。工作区还可以具有其内部状态快照并将其保存在仓库中，因此创建副本可以是源自原始模板或从包含用户开始使用工作空间之后所做的修改的镜像。
 
-Both the Che server and each workspace have their own embedded RESTful APIs. Everything that is done by the user dashboard Web application and the browser IDE is done over RESTful APIs. You can access these APIs using swagger as Swagger configurations are provided within each service. The API set within the server and each workspace dynamically changes based upon the plugins that have been deployed by the admin or the user.
+CHE服务器和每个工作区都有自己的嵌入式RESTful API。用户仪表板Web应用程序和浏览器IDE所做的一切都是通过RESTful API完成的。您可以使用swagger访问这些API，因为Swagger配置包含在每个服务中。服务器和工作空间内的API集合都根据管理员或用户的部署的插件而动态变化。
 
 [id="users"]
 == Users
 
-Che has three types of users:
+Che有三种类型的用户:
 
-* *Developers*. Che can be installed and used as a local IDE for any kind of programming language or framework, such as Java and JavaScript. While Che runs as a server, it can be run on a desktop, server, or within an embedded device. You can use Che with our embedded browser IDE or your existing IDE which is allowed to SSH into the Che workspaces.
-* *Product Owners*. Che provides APIs hosted within its workspace server to manage environments, workspaces, projects, templates, stacks, and intellisense for developer activities such as editing, syntax analysis, compiling, packaging, and debugging. You can use Che to host on-demand workspaces accessed by the Che IDE or a client that your product team authors. For example, SAP uses the Che workspace server to embed its development tools for SAP Hana.
-* *Plugin Providers*. Che provides a SDK to create and package plugins that modify the browser IDE, workspaces, or the Che server. ISVs and tool providers can add new project types, programming languages, tooling extensions, or applications. Che plugins can be authored for the client-side IDE or the server-side.
+* *开发者*. Che可以被作为本地的IDE安装，用于支持使用各种编程语言或框架，比如Java和Javascript的开发。当Che作为服务器运行时，可以运行在桌面，服务器，和嵌入设备中。你可能通过嵌入的浏览器IDE或用SSH连接入Che工作空间的已有IDE使用Che。
+* *产品的所有者*. Che提供托管在其工作空间服务器中的API，以管理开发人员活动的环境、工作空间、项目、模板、堆栈和智能感知，如编辑、语法分析、编译、打包和调试。使用Che来托管随需定制的工作空间，而Che IDE或产品团队创建的客户端访问工作空间。例如，SAP使用Che工作空间服务器嵌入开发工具支持SAP Hana。
+* *插件供应方*. Che提供一个SDK来创建和封装修改浏览器IDE、工作空间或Che服务器的插件。ISV和工具提供者可以添加新的项目类型、编程语言、工具扩展或应用程序。CHE插件可以为客户端IDE或服务器端而编写。
 
 [id="logical-architecture"]
 == Logical Architecture
