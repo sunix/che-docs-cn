@@ -102,40 +102,39 @@ Che有三种类型的用户:
 
 image::intro/intro-che-architecture.png[]
 
-Che is a workspace server that runs on top of an application server like Tomcat. When the Che server is launched, the IDE is loaded as a Web application accessible via a browser at `http://localhost:8080/`. The browser downloads the IDE as a single page web app from the Che server. The Web application provides UI components such as wizards, panels, editors, menus, toolbars, and dialog boxes.
+Che是在工作空间的服务器，它运行在像Tomcat这样的应用服务器上。当启动Che服务器时，IDE被加载为可通过浏览器在`http://localhost:8080/`访问的Web应用程序。浏览器从Che服务器下载作为单页Web应用程序的IDE。Web应用程序提供UI组件，例如向导、面板、编辑器、菜单、工具栏和对话框。
 
-As a user interacts with the Web application, they will create workspaces, projects, environments, machines, and other artifacts necessary to code and debug a project. The IDE communicates with Che over RESTful APIs that manage and interact with a Workspace Master.
+当用户与此Web应用程序交互时，他们将创建编码和调试项目所需的工作区、项目、环境、机器和其他工件。IDE通过RESTfulAPI与Che通信，这些API管理和与工作空间主服务交互。
 
-The Che server controls the lifecycle of workspaces. Workspaces are isolated spaces where developers can work. Che injects various services into each workspace, including the projects, source code, Che plug-ins, SSH daemon, and language services such as Eclipse JDT.LS Intellisense to provide refactoring for Java language projects. The workspace also contains a synchronizer which, depending upon whether the workspace is running locally or remotely, is responsible for synchronizing project files from within the machine with Che long term storage.
+CHE服务器控制工作空间的生命周期。工作空间是开发人员可以工作的隔离空间。CHE向每个工作空间注入各种服务，包括项目、源代码、CHE插件、SSH守护进程和诸如Eclipse JDT.LS智能信息服务的语言服务，以提供Java语言项目的重构。工作区还包含一个同步器，根据工作空间是本地运行还是远程运行，同步器负责将计算机内的项目文件与Che长期存储进行同步。
 
 [id="extensibility"]
-== Extensibility
+== 可扩展性
 
-Che provides an SDK for authoring new extensions, packaging extensions into plug-ins, and grouping plug-ins into an assembly. An assembly can either be executed stand alone as a new server, or, it can be installed onto desktops as an application using included installers.
+Che 提供了一个SDK用于制作新的扩展，把扩展打包为插件，并把插件组织为程序集。一个程序集或者被独立作为新服务器运行，或者，可以通过包含的安装包被作为一个应用安装在桌面上。
 
-There are a number of aspects that can be modified within Che.
+在Che内有很多方面可以被修改。
 
 [width="100%",cols="50%,50%",options="header",]
 |===
-| Type   | Description
-| IDE Extension   | Modify the look-and-feel, panels, editors, wizards, menus, toolbars, and pop-up boxes of the client. IDE extensions are authored in Java and transpiled into a JavaScript Web application that is hosted on the Che server as a WAR file.
-| Che Server Extension  (aka, Worskspace Master)   | Add or modify the core APIs that run within the Che server for managing workspaces, environments and machines. Workspace extensions are authored in Java and packaged as JAR files.
-| Workspace Extension  (aka, Workspace Agent)   | Create or modify project-specific extensions that run within a workspace machine and have local access to project files. Define machine behaviors, code templates, command instructions, scaffolding commands, and intellisense. The Che Java extension is authored as a workspace agent extension, deployed into the machine, and runs Eclipse JDT.LS services to do local intellisense operations against the remote workspace.
+| 类型   | 描述
+| IDE 扩展   | 修改外观，面板，编辑器，向导，菜单，工具条，以及客户弹出框。 IDE扩展通过Java编写，被翻译成Javascript Web应用，包含到作为WAR文件的Che Server中。
+| Che 服务器扩展  (也叫做: 工作空间主服务)   | 增加和修改核心API，这些API和Che Server一起运行用于管理工作空间，环境和机器。工作空间扩展通过Java制作并被打包为JAR文件.
+| 工作空间扩展  (也叫做, 工作空间代理)   | 创建或修改在工作空间机器中运行并对项目文件具有本地访问权的特定于项目的扩展。定义机器行为、代码模板、命令指令、搭建命令和智能感知。CHEJava扩展是作为工作空间代理扩展编写的，部署到该机器中，并运行Eclipse JDT.LS服务来对远程工作空间进行本地智能感知操作。
 |===
 
-Each extension type is packaged separately because they are deployed differently into the assembly. IDE extensions are transpiled using GWT to generate a cross-browser JavaScript. This application is packaged as a WAR file and hosted on the Che server.
+每个扩展类型都单独打包，因为它们以不同的方式部署到程序集中。IDE扩展被通过GWT进行转储以生成跨浏览器JavaScript。此应用程序打包为WAR文件并托管在Che服务器上。
 
-Workspace master extensions are deployed as services within the Che server. Once deployed, they activate new management services that can control users, identity and workspaces.
+工作空间主服务扩展作为Che服务器内的服务部署。一旦部署，它们就会激活新的管理服务，这些服务可以控制用户、身份和工作空间。
 
-Workspace agent extensions are compiled with Che core libraries and also deployed within an embedded Che server that runs inside of each workspace machine. The Che server is injected into machines created and controlled by the central workspace master Che server. This embedded server hosts your workspace agent extensions and provides a communication bridge between the services hosted within Che and the machines that are hosting the project.
+工作空间代理扩展用Che核心库编译，并且还部署在每个工作空间机器内部运行的嵌入式Che服务器中。Che服务器被注入到由中央工作空间主服务(Che 服务器)创建和控制的机器中。这个嵌入式服务器托管您的工作空间代理扩展，并在Che中托管的服务和托管项目的机器之间提供通信桥梁。
 
 [id="machines"]
-== Machines
+== 机器
 
-When you develop with a desktop IDE, the workspace uses localhost as the execution environment for processes like build, run and debug. In a cloud IDE, localhost is not available, so the workspace server must generate the environments that it needs. These environments must be isolated from one another and scalable. We generate containers that contain the software needed for each environment. Each workspace is given at least one environment, but users may create additional environments for each workspace if they want. Each container can have different software installed. Che installs different software into the machine based upon the project type. For example, a Java project will have the JDK, Git, and Maven installed. When a user is working within their Workspace, this container is booted by Che and the source code of the project is mounted within it. Developer actions like auto-complete and `mvn clean install` are processes that are executed within the container. Users can provide their own Dockerfiles or Composefile that Che will build into images and extension developers can register Dockerfile templates associated with a project type. This allows Che to manage a potentially infinite number of environments while still giving users customization flexibility.
+使用桌面IDE进行开发时，工作空间使用localhost作为构建、运行和调试等进程的执行环境。在云IDE中，localhost不可用，因此工作空间服务器必须生成所需的环境。这些环境必须相互隔离和可伸缩。我们生成包含每个环境所需软件的容器。每个工作空间至少有一个环境，但是用户可以为每个工作空间创建附加环境。每个容器可以安装不同的软件。CHE基于项目类型将不同的软件安装到机器上。例如，Java项目将安装JDK、GIT和Maven。当用户在工作空间中工作时，这个容器由Che引导，并且项目的源代码安装在其中。像自动完成和`mvn clean install`这样的开发人员操作是在容器中执行的过程。用户可以提供自己的Dockerfile或Composefile，Che将构建到镜像中，扩展开发人员可以注册与项目类型相关联的Dockerfile模板。这允许Che管理潜在的无限数量的环境，同时仍然为用户提供定制灵活性。
 
 [id="whats-included"]
-== What’s Included
+== 包括什么
 
-Che ships with a large number of plugins for many programming languages, build systems, source code tools, and infrastructure including Java, Maven, Ant, Git, JavaScript, and Angular.JS. The community is developing their own and many are merged into the main Che repository. Che can be installed on any operating system that supports Docker 1.8+, OpenShift or Java 1.8 – desktop, server or cloud and has been tested on Linux, MacOS and Windows. It is originally licensed as EPL 1.0, and starting from version 6.9.0 and higher - as EPL 2.0.
-
+CHE具有大量的插件，用于许多编程语言，构建系统、源代码工具和基础设施，包括Java、Maven、Ant、Git、JavaScript和angulas.js。社区正在开发他们自己的，并且许多已经合并到主要的Che存储库中。CHE可以安装在支持DOCKER 1.8 +、OpenShift或Java 1.8——桌面、服务器或云的任何操作系统上，并且已经在Linux、MaOS和Windows上进行了测试。它最初被授权为EPL 1.0，从版本6.9.0和更高版本开始——作为EPL 2.0。
