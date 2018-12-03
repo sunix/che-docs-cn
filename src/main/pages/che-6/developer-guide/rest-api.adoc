@@ -9,10 +9,11 @@ folder: che-6/developer-guide
 ---
 
 
-Eclipse Che server side components - both for master and workspace agents - are exposed as REST services which makes it easy to integrate Che in other platforms or use custom clients to create and run workspaces, import and update projects, update/delete workspaces and associated objects etc.
+Eclipse Che服务器端组件（用于主服务和工作空间代理）都以REST服务公开，这使得将Che集成到其他平台或使用定制客户端来创建和运行工作空间、导入和更新项目、更新/删除工作空间和相关对象等变得容易。
 
-You can make yourself familiar with available APIs in Swagger UI page - all methods have swagger annotations. Che master APIs are available at at `${CHE_HOST}/swagger/`. If you use multi-user Che flavor, you will need link:authentication.html[authentication token].
+您可以通过SwaggerUI页面掌握可用的API——所有方法都有swagger注解。Che主服务API可在 `${CHE_HOST}/swagger/` 。如果使用多用户Che特性，则需要 link:authentication.html[身份验证令牌]。
 
-Probably, https://github.com/eclipse/che/blob/master/wsmaster/che-core-api-workspace/src/main/java/org/eclipse/che/api/workspace/server/WorkspaceService.java[workspace API] is the most interesting one to take a closer look. Workspace API lets you remotely interact with Che master to create developer environments - create, update and delete workspaces, start workspaces by creating and deleting runtime, add, update and delete workspace environments, associate commands with a workspace.
+大概，近距离的了解 https://github.com/eclipse/che/blob/master/wsmaster/che-core-api-workspace/src/main/java/org/eclipse/che/api/workspace/server/WorkspaceService.java[工作空间API]是非常有趣的事情。
+工作空间API允许您与Che master远程交互以创建开发人员环境——创建、更新和删除工作空间，通过创建和删除运行时来启动工作空间，添加、更新和删除工作空间环境，及工作空间关联的命令。
 
-Workspace agent APIs focus on link:project-types.html[project types], link:projects.html[projects] and things related to projects, like link:version-control.html[Git]. To see the list of available workspace REST APIs, follow instructions in link:authentication.html[authentication docs]. With https://github.com/eclipse/che/blob/master/wsagent/che-core-api-project/src/main/java/org/eclipse/che/api/project/server/ProjectService.java[Project API] you can programmatically create/import projects in a workspace, update configuration, get file content using custom plugins or 3rd-party clients.
+工作空间代理API专注于 link:project-types.html[项目类型]、 link:projects.html[项目] 和与项目相关的东西，如 link:version-control.html[Git]。若要查看可用工作空间Rest API的列表，请遵循 link:authentication.html[身份验证文档]中的说明。使用 https://github.com/eclipse/che/blob/master/wsagent/che-core-api-project/src/main/java/org/eclipse/che/api/project/server/ProjectService.java[Project API]，您可以在工作空间中以编程方式创建/导入项目、更新配置、使用自定义插件或第三方客户端获取文件内容。
