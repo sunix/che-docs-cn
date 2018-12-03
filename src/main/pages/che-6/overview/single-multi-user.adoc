@@ -1,5 +1,5 @@
 ---
-title: "Single and Multi-User Che"
+title: "单用户和多用户模式的Che"
 keywords: single-user, Eclipse Che
 tags: [installation, getting-started]
 sidebar: che_6_docs
@@ -9,37 +9,37 @@ folder: che-6/overview
 
 ---
 
-Eclipse Che is available in two different modes: single-user and multi-user.
+Eclipse Che有两种不同的可用方式: 单用户模式和用户模式。
 
-**Single-user Che**
+**单用户模式的Che**
 
-To use Che on your local machine or to evaluate the platform, start with single-user Che. The advantages of using single-user Che are:
+在本地主机运行，或为了评估平台而使用Che，可以单用户模式启动Che。以单用户模式使用Che的好处是：
 
-* The command line interface pulls fewer images.
-* The user dashboard is quickly available because no login is required.
+* 命令行接口下拉更少的镜像。
+* 用户仪表盘快速可用，因为不需要登录。
 
-Single-user Che does not provide multi-tenancy nor permissions for entities such as workspaces. Che server and workspaces are not secure with single-user Che.
+单用户下Che不用为实体，如工作空间，提供多租户和访问许可。Che 服务器和工作空间中单用户方式下是不安全的。
 
-.Additional Resources
+.其它的资料
 
-* To run Che in single-user mode using Docker, see link:docker-single-user.html[Single-user on Docker].
+* 在Docker上以单用户模式运行Che，参见 link:docker-single-user.html[Docker上的单用户]。
 
-* To run Che in single-user mode using OpenShift, see link:openshift-single-user.html[Single-user on OpenShift].
+* 在OpenShift上以单用户模式运行Che，参见 link:openshift-single-user.html[OpenShift上的单用户]。
 
-**Multi-user Che**
+**多用户模式的Che**
 
-Multi-user Che provides multi-tenancy. Che uses http://www.keycloak.org[Keycloak] to register, manage, and authenticate users. Keycloak tokens provide security for user accounts and workspaces. The Permissions API regulates access to different entities such as workspaces, stacks, recipes, and organizations. User information is stored in a persistent PostgreSQL database, which supports migrations.
+多用户方式提供了多租户。Che使用 http://www.keycloak.org[Keycloak] 注册、管理、和认证用户。Keycloak的令牌为用户账号和工作空间提供了安全。访问许可 API 按规则约束对不同的实体，如：workspaces, stacks, recipes, organizations的访问。用户信息被存储到持久化数据库PostgreSQL中，并支持数据迁移。
 
-The advantages of using multi-user Che are:
+Che在多用户模式下的优点是：
 
-* The fully functional web IDE supports precise access controls.
-* The standalone Keycloak server supports user federation and identity providers.
+* 对所有的功能实现精准的访问控制。
+* 独立运行的Keycloak服务器支持用户联合和标识提供者。
 
-By default, Che deploys in single-user mode for Docker and OpenShift. You can use special flags to enable multi-user functionality.
+缺省情况下，在Docker和OpenShift下Che部署的都说单用户模式。通过特殊标志可以启用多用户方式的机制。
 
-.Additional Resources
+.其它资料
 
-* To run Che in multi-user mode using Docker, see link:docker-multi-user.html[Multi-user on Docker].
+* 如何在Docker上以多用户模式运行Che， 参见 link:docker-multi-user.html[Docker上的多用户]。
 
-* To run Che in multi-user mode using OpenShift, see link:openshift-multi-user.html[Multi-user on OpenShift].
+* 如何在OpenShift上以多用户模式运行Che，参见 link:openshift-multi-user.html[OpenShift上的多用户]。
 

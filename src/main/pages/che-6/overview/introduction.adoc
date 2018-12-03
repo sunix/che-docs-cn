@@ -20,17 +20,17 @@ Eclipse Che 提供:
 * 可创建插件和程序集的SDK
 
 [id="getting-started"]
-== 开始
+== 入门
 
 你可以通过下面的方式开始进入Che:
 
 * link:quick-start.html[快速启动指南]
-* 在Docker上安装: link:docker-single-user.html[单用户] or link:docker-multi-user.html[多用户]
-* 在OpenShift上安装: link:openshift-single-user.html[单用户] or link:openshift-multi-user.html[多用户]
+* 在Docker上安装: link:docker-single-user.html[单用户] 或 link:docker-multi-user.html[多用户]
+* 在OpenShift上安装: link:openshift-single-user.html[单用户] 或 link:openshift-multi-user.html[多用户]
 * https://che.openshift.io[创建可控的SaaS账户] (在che.openshift.io上)
 
 [id="single-and-multi-user-flavors"]
-== 单用户和多用户模式Single and Multi-User Flavors
+== 单用户和多用户特色
 
 Eclipse Che有两种可用的方式：
 
@@ -39,7 +39,7 @@ Eclipse Che有两种可用的方式：
 
 关于单用户和多用户的特点，可通过link:single-multi-user.html[页面]了解到.
 
-鉴于`多用户`模式是高级的安装方式，在快速启动中仅包含了`单用户`模式。如果你对`多用户`模式感兴趣，请阅读下面的文档：
+鉴于 `多用户` 模式是高级的安装方式，在快速启动中仅包含了`单用户`模式。如果你对 `多用户` 模式感兴趣，请阅读下面的文档：
 
 * link:docker-multi-user.html[在Docker上配置多用户]
 * link:openshift-multi-user.html[在OpenShift上配置多用户]
@@ -89,7 +89,7 @@ image::intro/intro-share-workspace.png[]
 CHE服务器和每个工作区都有自己的嵌入式RESTful API。用户仪表板Web应用程序和浏览器IDE所做的一切都是通过RESTful API完成的。您可以使用swagger访问这些API，因为Swagger配置包含在每个服务中。服务器和工作空间内的API集合都根据管理员或用户的部署的插件而动态变化。
 
 [id="users"]
-== Users
+== 用户
 
 Che有三种类型的用户:
 
@@ -98,7 +98,7 @@ Che有三种类型的用户:
 * *插件供应方*. Che提供一个SDK来创建和封装修改浏览器IDE、工作空间或Che服务器的插件。ISV和工具提供者可以添加新的项目类型、编程语言、工具扩展或应用程序。CHE插件可以为客户端IDE或服务器端而编写。
 
 [id="logical-architecture"]
-== Logical Architecture
+== 逻辑架构
 
 image::intro/intro-che-architecture.png[]
 
