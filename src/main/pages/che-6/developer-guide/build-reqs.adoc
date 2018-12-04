@@ -1,5 +1,5 @@
 ---
-title: "Build Requirements"
+title: "构建需求"
 keywords: java. maven, node, npm
 tags: [dev-docs]
 sidebar: che_6_docs
@@ -10,58 +10,58 @@ folder: che-6/developer-guide
 
 
 [id="build-command"]
-== Build Command
+== 构建命令
 
 `mvn clean install`
 
-Execute this command in the root of your custom assembly or Che repo. To make your build faster, you may use the following arguments:
+在定制的程序集或Che仓库的根目录下执行这个命令。为了让构建执行的更快，你可以使用下面的参数：
 
 `-Dskip-enforce -DskipTests -Dskip-validate-sources -Dfindbugs.skip -DskipIntegrationTests=true -Dmdep.analyze.skip=true`
 
-If you prepare a PR to upstream Che, make sure build is a success with just `mvn clean install` with all the tests and enforcers. If you have enough CPU, you may also add `-Dgwt.compiler.localWorkers=4` so that 4 CPU cores will be used during GWT compilation.
+如果你计划做一个PR到Che上游，要确保构建时使用命令 `mvn clean install` 让所有的测试和强制检查是成功的。如果你有足够多的CPU可用，你可以使用命令 `-Dgwt.compiler.localWorkers=4` ，这会使用4个CPU核心做GWT的编译。
 
 [id="pre-reqs"]
-== Pre-Reqs
+== 预先准备
 
 * JDK 1.8.0_130+
 * Maven 3.3.5+
 * Go 1.8+
 
-By default, Che is built with docker profile, which means Dashboard is built in a Docker container. You may use a different profile though - `mvn clean install -Pnative` - in that case the following Node.JS version needs to be available:
+默认情况下，Che是用Docker配置文件构建的，这意味着仪表板是在Docker容器中构建的。不过，您可以使用不同的配置文件-`mvn clean install-P`-在这种情况下，需要使用下面的Node.JS版本：
 
 * Node.JS 5.4+
 
-If your link:assemblies.html[custom assembly] does not bring any changes to Dashboard, https://github.com/eclipse/che/tree/master/agents[Golang agents] and link:what-are-workspaces.html#bootstrapper[bootstrapper], you just need JDK 1.8.0_130+ installed.
+如果你的 link:assemblies.html[定制程序集] 并没有改变 Dashboard, https://github.com/eclipse/che/tree/master/agents[Golang agents] and link:what-are-workspaces.html#bootstrapper[bootstrapper], 你仅需要安装JDK 1.8.0_130+。
 
-At least 2 CPUs and 8GB RAM (recommended) is required.
+最低的配置是 2 CPUs 和 8GB RAM (推荐).
 
 [id="build-in-docker"]
-== Build in Docker
+== 在 Docker中构建
 
-You can use a https://github.com/eclipse/che/blob/master/dockerfiles/dev/Dockerfile[dev Docker image]:
+你可以使用 https://github.com/eclipse/che/blob/master/dockerfiles/dev/Dockerfile[开发镜像]:
 
 `docker run -ti -v ~/.m2:/home/user/.m2 -v /path/to/che/assembly:/che eclipse/che-dev:nightly sh -c "mvn clean install"`
 
-We recommend mounting Maven repo (`-v ~/.m2:/home/user/.m2`) to persist dependencies and make subsequent builds faster.
+我们推荐挂载Maven仓库 (`-v ~/.m2:/home/user/.m2`) 以持久化依赖项而加速构建。
 
 [id="build-in-che"]
-== Build in Che
+== 在Che中构建
 
-See: link:che-in-che-quickstart.html[Che in Che quickstart]
+参见: link:che-in-che-quickstart.html[Che在Che中的快速开始]
 
 [id="enforcers"]
-== Enforcers
+== 强制执行
 
-There are a few Maven enforcers brought by a parent pom.
+在父pom文件中有一些强制执行的事项
 
-*License*
+*许可*
 
-All source file should have expected license. If your build fails because of a missing license, you may run `mvn license:format`
+所有的源代码文件中都应该有许可信息。如果你因为缺少了许可而构建失败，你可以执行命令 `mvn license:format`
 
-*Dependency Convergence*
+*依赖项的收敛*
 
-Your custom dependencies need to be declared to follow dependency convergence rules in Che (i.e. all dependencies have to be declared either in Che `maven-depmgt-pom` or in a root pom of an assembly).
+需要遵循CHE中的依赖性收敛规则声明您的自定义依赖项（即，所有依赖项必须声明在Che`maven-depmgt-pom'中或程序集的根pom中）。
 
-*Formatting*
+*格式*
 
-See: https://github.com/eclipse/che/wiki/Development-Workflow#code-style[Code Style]
+参见: https://github.com/eclipse/che/wiki/Development-Workflow#code-style[代码规范]

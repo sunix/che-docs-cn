@@ -357,7 +357,7 @@ div#toc ul li ul li::before {
 }
 
 div#toc >ul::before {
-    content: "In this article:";
+    content: "本文内容:";
     font-weight: 500;
     color: #555;
     text-align:center;
@@ -675,7 +675,7 @@ a[data-toggle] {
 }
 
 .summary:before {
-    content: "Summary: ";
+    content: "概要: ";
     font-weight: bold;
 }
 

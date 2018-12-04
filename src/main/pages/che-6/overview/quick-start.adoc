@@ -1,5 +1,5 @@
 ---
-title: "Quick-Start"
+title: "快速启动"
 keywords: docker, installation, minishift, openshift
 tags: [installation, docker]
 sidebar: che_6_docs
@@ -8,7 +8,6 @@ redirect_from: quick-start.html
 folder: che-6/overview
 ---
 
-1
 Eclipse Che是开发者工作空间服务器和云IDE。你可以使用不同的容器编排引擎（如Docker或OpenShift）安装、运行和管理Eclipse Che。
 
 Eclipse Che有两种可用的方式：
