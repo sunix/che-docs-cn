@@ -26,41 +26,42 @@ image::devel/create_extension.png[]
 [id="build-a-deploy-your-extension"]
 == 构建部署扩展
 
-When the project shows up in project explorer, you will find 2 main Maven modules: `assembly` (See: link:assemblies.html[Assemblies]) and plugins (containing plugins themselves).
+在项目在项目浏览窗口中显示出来后，你能看到两个主Maven模块： `程序集` （见：link:assemblies.html[程序集]）与Plugins(包含插件自身)。
 
-Execute `Traefik Start`, `Tomcat8-IDE Start`, `Deploy IDE` and `Deploy Workspace Agent` commands:
+执行 `Traefik Start`, `Tomcat8-IDE Start`, `Deploy IDE` and `Deploy Workspace Agent` 命令：
 
 image::devel/commands.png[]
 
-* Tomcat8-IDE Start - the name speaks for itself. The command starts a Tomcat 8 server
-* Traefik Start - we need some smart redirects inside a workspace. By design, the IDE tries to reach workspace master at the same host:port it is running. Since we will access the 2nd IDE instance on the same host, but a different port (it’s a random port from the ephemeral port range that Docker uses to publish exposed ports)
-* Deploy IDE - build ide-war module and its dependencies and packages `war` artifact and copies ide.war from `assembly-ide-war` target dir over to Tomcat’s webapp
-* Deploy Workspace Agent does the same with the agent war artifact
+* Tomcat8-IDE Start - 作用恰如其名。命令启动Tomcat 8服务器
+* Traefik Start - 我们需要一些工作区内的智能重定向。通过设计，IDE试图通过它运行的相同的hotst:port访问工作空间主服务。我们将访问同一主机上的第二个IDE实例，但会访问不同的端口（这是Docker用于发布公开端口的临时端口范围的随机端口）
+* Deploy IDE - 构建 ide-war 模块和它的依赖项和 `war` 包，并把ide.war从 `assembly-ide-war` 的target目录拷贝到Tomcat的webapp下。
+* Deploy Workspace Agent 对agent war包做同样处理
 
-The last two commands have identical preview URLs pointing to `host:port` Tomcat 8 with two extensions is bound to. You will notice `?wsagent-ref-prefix=dev-` appended to the URL. This param is an instruction for the IDE to connect to your custom workspace agent, not the default one (this is where Traefik magic happens). Click this preview URL, and when you are in the 2nd instance of IDE, call context menu in the project explorer (right click) to find *MyAction*. Click it to see a notification with `Hello CheeAllPowerfull` message:
+后两个命令有相同的URL, 它指向带有两个扩展的Tomcat绑定的 `host:port`。你会发现URL中追加了 `?wsagent-ref-prefix=dev-` 。这个参数指示IDE连接你定制的工作空间，而不是缺省的那个(这正是Traefik的神奇所在)。点击预览URL，当你在第二个IDE实例中，在Project浏览窗口(右键)调用上下文菜单，会看到 *MyAction*。点击它会看到 `Hello CheeAllPowerfull` 的消息提示。
+
 
 image::devel/sample_action.png[]
 
 [id="develop-and-debug-client-side"]
-== Develop and Debug Client Side
+== 开发和调试客户端
 
-Get back to an original IDE instance and execute `GWT SDM` command which will run http://www.gwtproject.org/articles/superdevmode.html[GWT Super Dev Mode]. You can find more info about Super Dev Mode in Che at link:ide-extensions-gwt.html#debugging-with-super-devmode[this page]. When the compilation is completed, hit the preview URL which will display a page with further instructions. You’ll have to drag 2 bookmarks to your browser’s bookmarks bar. Having done that, change menu item title in `MyAction.java`:
+返回初始的IDE实例执行命令 `GWT SDM`，将启动http://www.gwtproject.org/articles/superdevmode.html[GWT Super Dev Mode]。你能发现更多的关于Super Dev Mode的信息通过 link:ide-extensions-gwt.html#debugging-with-super-devmode[这页] 内容。当完成编译后，按下预览URL将显示出有操作提示的页面。你需要拖拽两个书签到你的浏览器的书签条上。完成后，在 `MyAction.java` 中修改菜单的标题：
 
 [source,java]
 ----
     super("My New Action", "My Action Description");
 ----
 
-Return to the 2nd IDE instance, click *Dev Mode On* button and hit *Compile*. Re-compilation should take ~15 seconds. Once done, call context menu in the project explorer again to see your changes.
+返回到第二IDE实例，点击 *Dev Mode On* 按钮并执行 *Compile*。重新编译大概用15秒钟。等完成后，在项目浏览窗口再次调用环境菜单查看你的修改。
 
-You can also debug your client code in the browser. In the 2nd IDE instance with your custom plugin, open `Chrome dev console > Sources > Ctrl + P > MyAction.java`. Set a breakpoint in this class and call `My New Action` in the context menu.
+你还能在浏览器中调试你的客户端代码。在带有你定制插件的第二个IDE实例中，打开 `Chrome dev console > Sources > Ctrl + P > MyAction.java`。 在类中设置断电并在环境菜单中执行 `My New Action`。
 
 image::devel/debug_chrome.png[]
 
 [id="develop-and-debug-server-side"]
-== Develop and Debug Server Side
+== 开发和调试服务端
 
-Let’s change response from our REST service in `MyService.java`:
+让我们对 `MyService.java` 中REST服务的响应进行修改：
 
 [source,java]
 ----
@@ -69,15 +70,15 @@ public String sayHello(@PathParam("name") String name) {
 }
 ----
 
-Select this submodule in project explorer (`plugin-serverservice-server`) and run `Build` and `Workspace Agent Hot Deploy` commands one by one that will package your extension into jar artifact and swap it (by copying) in Tomcat’s `webapps/ROOT/WEB-INF/lib/` that Tomcat hot deploys it. Now return to your 2nd IDE instance, call My New Action and get an updated response from server side.
+在项目浏览窗口中选择这个模块 (`plugin-serverservice-server`) 并逐个地运行 `Build`  和 `Workspace Agent Hot Deploy` 命令，这将把你的扩展打包为jar和放置(通过拷贝)到 `webapps/ROOT/WEB-INF/lib/` 下给Tomcat做热部署。现在，回到你的第二个IDE实例，调出My New Action，得到服务端更新的响应。 
 
-It’s time to *debug* this REST service. By default, we have started Tomcat in a debug mode (`jpda run`) on port 9000 which we will use to attach Che debugger.
+是时间对这个REST 服务进行 *Debug* 了。缺省地，我们以debug模式(`jpda run`)在9000端口启动Tomcat，我们通过这个端口连接调试器。
 
-Open `MyService.java` and set a breakpoint on line 31 (where response is returned). Go to *Run > Edit Debug Configurations > Java > Connect to process on a workspace machine > port 9000*. Save this configuration and click Debug. You will also see this configuration at *Run > Debug*.
+打开 `MyService.java` 在31行（响应返回的位置）设置断点。进入 *Run > Edit Debug Configurations > Java > Connect to process on a workspace machine > port 9000*。保存配置并点击Debug。你也会在 *Run > Debug* 看到这个配置。 
 
-Return to the 2nd IDE instance and call My New Action. You will get stuck and see a loader. In the main IDE instance you will see a debugger panel:
+返回第二个IDE实例并调用My New Action，你会阻塞并看到加载器。在主IDE实例中，你将能看到调试面板：
 
 image::devel/debugger.png[]
 
-In Variable window, click `Change variable` icon and replace the value with anything you like. Hit Resume (F9) and get back to your 2nd IDE instance to see the updated response from the REST service.
+在变量窗口，点击 `Change variable` 图标对值做任意修改。点击 Resume(F9)返回到第二个IDE实例查看从REST服务返回的新消息。
 
