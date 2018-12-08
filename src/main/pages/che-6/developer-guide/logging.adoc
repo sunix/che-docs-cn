@@ -1,5 +1,5 @@
 ---
-title: Che logging
+title: Che 的日志记录
 sidebar: che_6_docs
 keywords: dev docs
 tags: [extensions, assembly, logging, log, logs]
@@ -10,15 +10,15 @@ folder: che-6/developer-guide
 
 
 [id="logging-in-che"]
-== Logging in Che
+== 在Che中的日志记录
 
-By default ws-master and ws-agent are configured to use logback as default logging backend. Their configuration produces plaintext logs to output of Che assembly and stores it to files. There are several options on how to customize logs producing in Che. Che is bundled with 2 variants of logger format and location settings `json` and `plaintext`. +
-JSON setting produces logs in JSON stream format and doesn’t store them in any files. +
-Plaintext setting produces logs in the format of plain text and stores it in directory Che logs dir. +
-To switch these encodings set environment variable `CHE_LOGS_APPENDERS_IMPL` to `json` or `plaintext`. Value `plaintext` is default setting.
+缺省情况下，ws-master和ws-agent都被配置用logback作为缺省的日志记录后端。它们的配置生成Che程序集输出的明文文本并保存到文件中。有一些选项是关于如何设置Che生成日志的。Che绑定了两种变化关于两种日志格式和位置设置 `json` 和 `明文(plaintext)` +
+JSON 设置以JSON流形式生成日志且并不把日志保存到任何文件。+
+明文设置以明文形式生成日志并把日志保存到che的日志目录。+
+要切换这些编码方式，通过设置环境变量 `CHE_LOGS_APPENDERS_IMPL` 为 `json` 或 `plaintext`。缺省设置是 `plaintext`.
 
-To add a custom implementation of logger producing create link:assemblies.html[custom assembly], set environment variable `CHE_LOGS_APPENDERS_IMPL=myimpl` and add files `logback-file-myimpl-appenders.xml` and `tomcat-file-myimpl-appenders.xml` to `tomcat/conf` folder. +
-An example of these files which adds storing logs in JSON format in files: +
+要添加一个日志输出的自定义的实现创建 link:assemblies.html[自定义程序集], 设置环境变量 `CHE_LOGS_APPENDERS_IMPL=myimpl` 并增加文件 `logback-file-myimpl-appenders.xml` 和 `tomcat-file-myimpl-appenders.xml` 到 `tomcat/conf` 文件夹。 +
+一个关于这些文件的示例是关于如何以JSON格式存储日志到文件的：+
 logback-file-json-appenders.xml
 
 [source,xml]
@@ -73,33 +73,33 @@ tomcat-file-json-appenders.xml
 </included>
 ----
 
-Other `logback-logstash-encoder` appenders can be added as well. See https://github.com/logstash/logstash-logback-encoder#usage. +
-Note that to change logging settings for workspace environment variable should be set in workspaces and assembly of ws-agent should be extended in addition to the same actions for Che master. +
-On the other hand, customizing of ws-agent logs is uncommon practise, so it can be avoided.
+也可以添加其它的 `logback-logstash-encoder` appenders。见https://github.com/logstash/logstash-logback-encoder#usage. +
+注意，要更改工作空间环境变量的日志设置，应该在工作空间中设置，并且除了针对Che master的相同操作之外，还应该扩展ws-agent的程序集。+
+另一方面，定制WS-Agent日志并不常见，因此可以避免。
 
-Also, there are two ways to extend chosen configuration. 1. Put your configuration in `${che.local.conf.dir}/logback/logback-additional-appenders.xml` or `${catalina.home}/conf/logback-additional-appenders.xml` file 2. Provide environment variable in such form
+此外，有两种方式扩展选择配置。1. 把配置放在文件 `${che.local.conf.dir}/logback/logback-additional-appenders.xml` 或 `${catalina.home}/conf/logback-additional-appenders.xml`  2. 以下面方式提供环境变量
 
 ----
 CHE_LOGGER_CONFIG=logger1=logger1_level,logger2=logger2_level
 ----
 
-for example
+例如
 
 ----
 CHE_LOGGER_CONFIG=org.eclipse.che=DEBUG,org.eclipse.che.api.installer.server.impl.LocalInstallerRegistry=OFF 
 ----
 
-Che Server also has an option to view and edit logger configuration during runtime through following REST services:
+Che 服务器也有选项以查看和编辑日志配置，在运行时通过下面的REST服务：
 
 [cols=",,",options="header",]
 |===
-|GET | `logger/ -` | get list of all loggers
-|GET | `logger/{name}` | get info about particular logger
-|POST | `logger/{name}` | update logger configuration
-|PUT | `logger/{name}` | create logger configuration
+|GET | `logger/ -` | 获取所有日志记录器的列表
+|GET | `logger/{name}` | 获取某记录器的信息
+|POST | `logger/{name}` | 更新计量器的配置
+|PUT | `logger/{name}` | 创建计量器的配置
 |===
 
-For example, sending PUT request with following configuration
+例如，发送带有下面配置的PUT请求
 
 ```
 {
@@ -108,4 +108,4 @@ For example, sending PUT request with following configuration
 }
 ```
 
-will add logger level configuration that will set DEBUG level for loggers in `org.eclipse.che.api.workspace.activity` package
+会为在 `org.eclipse.che.api.workspace.activity` 包中的记录器增加将level设置为DEBUG的配置
