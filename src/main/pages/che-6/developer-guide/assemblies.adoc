@@ -1,5 +1,5 @@
 ---
-title: Che Assemblies
+title: Che 程序集
 sidebar: che_6_docs
 keywords: dev docs
 tags: [extensions, assembly]
@@ -10,59 +10,61 @@ folder: che-6/developer-guide
 
 
 [id="what-is-a-che-assembly"]
-== What Is a Che Assembly?
+== Che 程序集是什么？
 
-An assembly is a Maven module that produces a build artifact. In case of https://github.com/eclipse/che/tree/master/assembly[Eclipse Che], this is either a `.war` with `jars` in it, or a Tomcat assembly, which is a Tomcat web server with custom configuration and artifacts, copied to `webapps`. The following are Eclipse Che assemblies:
+程序集是一个产生构建工件的Maven模块。对 https://github.com/eclipse/che/tree/master/assembly[Eclipse Che] 来说，或者是一个带有多个 `jars` 包的 `war` 文件，或者是一个Tomcat程序集，是一个把自定义的配置和工件拷贝到 `webapps`下的Tomcat Web 服务器。下面这些是Eclipse Che 程序集：
 
 [width="100%",cols="61%,39%",options="header",]
 |===
-|Che Assembly |What Is Included
-|`assembly-ide-war` |GWT plugins that will be compiled into a new browser IDE as JavaScript
-|`assembly-wsagent-war` |Java plugins that will run within a workspace agent, deployed as `.war` artifact with numerous jars in it
-|`assembly-wsagent-server` |Packages workspace agent into a Tomcat that is then launched in a machine
-|`assembly-wsmaster-war` |Java plugins that will run within Che core server - master
-|`assembly-main` |Packages all Che modules (including those listed above) into a final Tomcat bundle
+|Che 程序集 |包含的内容
+|`assembly-ide-war` |GWT 插件，它被作为javascript编译进一个新的浏览器 IDE
+|`assembly-wsagent-war` |Java 插件，它作为运行在工作空间的agent中，作为带有许多个jar包的 `.war` 部署。
+|`assembly-wsagent-server` |把工作空间agent打包到Tomcat中，然后Tomcat在机器中运行
+|`assembly-wsmaster-war` |Java 插件，它运行于Che内核服务器中 - 主服务(master)
+|`assembly-main` |打包所有的Che模块（含上述所有）到最终的Tomcat集束(bundle)
 |===
 
 [id="assembly-ide-war"]
 == assembly-ide-war
 
-Successful build of this module produces `ide.war` that is then deployed with Tomcat (produced by `assembly-main`) as `ROOT.war` that contains a handful or jars as dependencies and what’s more important - `_app` directory with JavaScript, CSS and other resources that are loaded into `IDE.html` when IDE is initialized.
+成功的构建这个模块会生成 `ide.war`, 它将以 `ROOT.war` 被部署到Tomcat(由 `assembly-main` 产生)中。 其中包含了少数的所依赖的jar，更重要的内容是 `_app` 目录，里面包含了Javascript, CSS及其它的资源，IDE在初始化时将它们加载到 `IDE.html` 中。
 
-This module inherits https://github.com/eclipse/che/blob/da18cd1867210f87a6071ed65930fb47fb8bb775/ide/che-ide-gwt-app/pom.xml[`che-ide-gwt-app`] that it its turn has https://github.com/eclipse/che/blob/5a6d3910b268feb3c4e67c2ff9aa5640410bf777/ide/che-ide-full/pom.xml[`che-ide-full`] in dependencies. So, `che-ide-full` is where all of the client side plugin dependencies are declared.
+这个模块源自 https://github.com/eclipse/che/blob/da18cd1867210f87a6071ed65930fb47fb8bb775/ide/che-ide-gwt-app/pom.xml[`che-ide-gwt-app`], 它通过  https://github.com/eclipse/che/blob/5a6d3910b268feb3c4e67c2ff9aa5640410bf777/ide/che-ide-full/pom.xml[`che-ide-full`] 间接的含了所有的依赖。 因此，在 `che-ide-full` 里声明了对所有客户端的依赖。
 
-However, if you build a custom assembly and your plugin provides client side changes, it is root pom.xml of *assembly-ide-war* that dependencies should be added to. See: link:ide-extensions-gwt.html[IDE Extensions].
+然而，如果你构建一个定制的程序集并在你的插件中提供客户端的功能，一定要把它添加到 *assembly-ide-war* 根 pom.xml中的dependencies内。见：link:ide-extensions-gwt.html[IDE 扩展]。
 
-This is the module that is most often extended with custom plugins.
+定制插件通常是在这个模块里扩展的。
 
 [id="assembly-wsagent-war"]
 == assembly-wsagent-war
 
-Build artifact of this module contains all server side plugins components packaged as jars. Root `pom.xml` contains dependencies to all plugins that get deployed with the workspace agent, and this is where dependencies to custom plugins should be added. Once built, `assembly-wsagent-war` is copied to `webapps` of ws-agent Tomcat as `ROOT.war`. This is the module that is most often extended with custom plugins.
+构建该模块的工件包含了所有服务器端的plugin组件，以jar形式打包。根 `pom.xml` 中包含对插件的依赖声明，所依赖的插件随工作空间的agent一起部署，这也是对定制的插件的依赖关系说明应该添加的地方。一旦构建， `assembly-wsagent-war` 作为 `ROOT.war`被拷贝到ws-agent Tomcat下的 `webapps` 下。  定制插件通常在这个模块里进行扩展。
 
 [id="assembly-wsagent-server"]
 == assembly-wsagent-server
 
-This module packages `ROOT.war` into Tomcat’s `webapps` and adds configuration files. This tomcat is packaged as tar.gz archive that is then placed into main Tomcat produced by `assembly-main` build.
+这个模块把 `ROOT.war` 打包进Tomcat的 `webapps` 并增加配置文件。 这个Tomcat被打包为tar.gz 文档，然后被放到由 `assembly-main` 构建生成的主Tomcat中。
 
 [id="assembly-wsmaster-war"]
 == assembly-wsmaster-war
 
-The core of Che platform as a workspace server that includes link:rest-api.html[workspace API], user profile and settings, link:spi-implementation.html[implementation of runtime infrastructure]. Usually used as a dependency in custom assemblies, however, it is possible to extend it, for example, by providing support of a new infrastructure.
+工作空间服务器作为Che平台的核心包含link:rest-api.html[workspace API], 用户信息管理和设置, link:spi-implementation.html[runtime基础设施的实现]。通常在定制程序集中作为依赖项使用。然而，它也可以被扩展，例如，提供对新基础设施的支持。
 
 [id="assembly-main"]
 == assembly-main
 
-This module’s name speaks for itself - this is the main assembly that packages all Che components into a Tomcat server. These components include wsmaster as `api.war`, User Dashboard as `dashboard.war`, documentation - `docs.war` and Swagger UI - `swagger.war`, agents like terminal and ws-agent (those are packaged into `lib` directory in the root of the resulting archive where Che master picks them up and serves, thus making them downloadable for link:installers.html[installers]).
+该模块正如其名 - 它作为主程序集把所有组件打包到Tomcat 服务器中。这些组件包括作为 `api.war` 的wsmaster, 作为 `dashboard.war` 的Dashboard, 文档 - `docs.war` 和Swgger UI - `swagger.war`, agents 如terminal和ws-agent(这些包被放到位于最终文档根下的 `lib` 目录中，由Che master提取和供给，遂使得它们可以被 link:installers.html[installers]下载). 
 
 [id="custom-assemblies"]
 == Custom Assemblies
 
-You may build own custom assembly of Che. To do so, there’s no need to clone/copy the entire Che source code. All artifacts can be used as dependencies. Moreover, unlike assemblies in Che source code, custom assemblies can use minimal artifacts for server and client side.
+你可以构建你自定义的Che程序集。为此，你不必要clone/copy整个的Che的源代码。所有工件可以被当做依赖项使用。而且，不像Che源代码中的程序集，定制化的程序集能使用为服务器和客户端使用小的工件。
 
-Here’s an https://github.com/che-samples/che-ide-server-extension[example] of a custom Che assembly that brings in two plugins - server- and client-side. You may clone this repository and use it as a basis for your custom Che assembly.
 
-Note that this example uses core artifacts as dependencies both for https://github.com/che-samples/che-ide-server-extension/blob/master/assembly/assembly-ide-war/pom.xml#L31-L35[client]:
+这有一个 https://github.com/che-samples/che-ide-server-extension[示例] 是关于有两个插件的定制的Che程序集的，一个插件是Server， 一个是客户端的。你可以clone这个库并把它作为你定制Che程序集的开始。
+
+
+请注意这个示例使用核心工件作为依赖项既有 https://github.com/che-samples/che-ide-server-extension/blob/master/assembly/assembly-ide-war/pom.xml#L31-L35[客户端]:
 
 [source,xml]
 ----
@@ -73,7 +75,7 @@ Note that this example uses core artifacts as dependencies both for https://gith
 </dependency>
 ----
 
-and https://github.com/che-samples/che-ide-server-extension/blob/master/assembly/assembly-wsagent-war/pom.xml#L22-L26[server side]
+也有 https://github.com/che-samples/che-ide-server-extension/blob/master/assembly/assembly-wsagent-war/pom.xml#L22-L26[服务端]
 
 [source,xml]
 ----
@@ -84,11 +86,11 @@ and https://github.com/che-samples/che-ide-server-extension/blob/master/assembly
 </dependency>
 ----
 
-Core artifacts contain a bare minimum set of platform components and plugins to be able to create and start a workspace, create or import a project, open and edit files in the editor.
+核心工件包含平台组件和插件的最小集，能创建和启动工作空间，创建或导入Project,在编辑器中打开和编辑文件。
 
-You may use full artifacts that include all standard Che plugins:
+你可以使用包含所有Che插件的所有工件：
 
-Client side:
+客户端:
 
 [source,xml]
 ----
@@ -99,7 +101,7 @@ Client side:
 </dependency>
 ----
 
-You may include a full IDE artifact and exclude a particular plugin:
+你可以包含除某个插件外的完整的IDE工件:
 
 [source,xml]
 ----
@@ -133,7 +135,7 @@ You may include a full IDE artifact and exclude a particular plugin:
  </build>
 ----
 
-Server side:
+服务器端:
 
 [source,xml]
 ----
@@ -145,9 +147,9 @@ Server side:
 </dependency>
 ----
 
-These two `pom.xml` files are entrypoints to adding custom plugins. This assembly includes two plugins that are declared in:
+这两个 `pom.xml` 文件是增加定制插件的入口。这个程序集包括两个插件，它们被声明在：
 
-* https://github.com/che-samples/che-ide-server-extension/blob/master/pom.xml#L54-L64[root pom.xml] - artifact version defaults to project version. These dependencies need to be declared to follow dependency convergence rules in Che (i.e. all dependencies have to be declared either in Che `maven-depmgt-pom` or in a root pom of an assembly). What `maven-depmgt-pom` parent brings is a set of enforcer plugins, like formatting, dependency management, source validation etc.
+* https://github.com/che-samples/che-ide-server-extension/blob/master/pom.xml#L54-L64[root pom.xml] - 工件版本默认为项目版本。需要声明这些依赖项以遵循Che中的依赖项收敛规则（即，所有依赖项必须在Che `maven-depmgt-pom' 中或在程序集的根pom中声明）。`Maven-depmgt-pom` 的parent带来的是一组执行器插件，如格式化、依赖性管理、源验证等。
 
 [source,xml]
 ----
@@ -169,7 +171,7 @@ These two `pom.xml` files are entrypoints to adding custom plugins. This assembl
 </dependency>
 ----
 
-This way, your client side plugin is included into `ide.war`. We use https://maven.apache.org/plugins/maven-war-plugin/overlays.html[Maven’s overlays feature] to package custom plugins into the resulting artifact.
+这样，你的客户端插件被包含到 `ide.war` 中。我们使用 https://maven.apache.org/plugins/maven-war-plugin/overlays.html[Maven’s overlays feature] 打包定制插件到生成的工件中。
 
 * https://github.com/che-samples/che-ide-server-extension/blob/master/assembly/assembly-wsagent-war/pom.xml#L27-L30[assembly-wsmaster-war pom]:
 
@@ -181,12 +183,12 @@ This way, your client side plugin is included into `ide.war`. We use https://mav
 </dependency>
 ----
 
-Your custom plugin packaged as jar is automatically added to inherited `wsagent` artifact if both are declared as dependencies in `pom.xml`. As a result, the final `.war` artifact will contain a custom jar.
+如果两个都被作为依赖项在 `pom.xml` 中声明，你的定制插件被打包为jar并自动添加到继承的 `wsagent` 工件中。作为结果，最终的 `.war` 工件将包含定制的jar。
 
 [id="update-assembly"]
-== Update Assembly
+== 更新程序集
 
-In a `pom.xml` update both:
+在 `pom.xml` 同时更新:
 
 [source,xml]
 ----
@@ -197,7 +199,7 @@ In a `pom.xml` update both:
 </parent>
 ----
 
-and
+和
 
 [source,xml]
 ----
@@ -206,9 +208,9 @@ and
 </properties>
 ----
 
-It is important to keep those versions consistent to avoid build failures and incompatibilities. It is also recommended to keep versions of own artifacts aligned with a parent version.
+保持这些版本一致以避免构建失败和不兼容是非常重要的。也推荐要保持自己工件的版本和父版本的一致。
 
 [id="next-steps"]
-== Next Steps
+== 下一步
 
-Now that you have got some knowledge about Che assemblies and own cloned a sample assembly, let’s take a closer look at Eclipse Che link:ide-extensions-gwt.html[client] and link:server-side-extensions.html[server-side] plugins.
+现在，你已经了解了Che 程序集的知识和复制了一个程序集示例，让我们更近的了解Eclipse Che link:ide-extensions-gwt.html[客户端] 和 link:server-side-extensions.html[服务端] 插件吧.
