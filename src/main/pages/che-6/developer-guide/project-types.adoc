@@ -1,5 +1,5 @@
 ---
-title: "Project Types"
+title: "Project 类型"
 keywords: framework, overview, framework, project, project type, API
 tags: [extensions, assembly, dev-docs]
 sidebar: che_6_docs
@@ -9,35 +9,36 @@ folder: che-6/developer-guide
 ---
 
 
-Project types allow you to provide custom project behavior for a certain language. Additionally, they allow you to specify specific project templates, which can be instantiated and already contain language specific content. Further, they allow the user to specify language specific properties for a project, e.g. compiler settings or dependencies. Finally, specific actions, e.g. in the context menu, can be associated with a project type.
+项目类型允许你为某种语言提供自定义的项目行为。另外，它们允许你指定某个项目模板，在其中已经完成初始化和包含语言相关的内容。更进一步，它们允许用户为项目指定语言的某种特性，例如，编译器的设置或依赖。最后，特定的action，比如在环境菜单中，可以与项目类型相关。
 
-In this part of the tutorial, we describe how to define a custom project type, how to provide a custom creation wizard, and how to add project-specific actions.
+在教程的这一部分，我们说明如何定义一个自定义的项目类型，如何提供自定义的创建向导，和如何增加项目相关的action。
 
-Sample assembly with https://github.com/che-samples/che-plugin-json[plugin JSON]. There’s also https://github.com/che-samples/che-plugin-wizard[another sample plugin] that registers a custom project type and adds it to project creation wizard.
+示例程序集有 https://github.com/che-samples/che-plugin-json[plugin JSON]。 以及 https://github.com/che-samples/che-plugin-wizard[另一个插件示例] 进行了自定义项目类型的注册和在项目创建向导中的添加。
 
 [id="custom-project-type"]
-== Custom Project Type
+== 自定义项目类型
 
-In this part of the tutorial, we describe how to define a new custom project type including a project initialization (e.g. to add default content). The following diagram shows all components of a project type registration. The classes highlighted in dark grey are to be implemented for the extension.
+这部分我们描述怎样定义新的自定义的项目类型包括项目的初始化（如：增加新的内容）。下面的图例展现了项目类型注册的所有组件。以暗灰色标注的类是为扩展需要实现的部分。
 
 image::devel/ProjectType.png[]
 
-The custom `ProjectTypeDef` implementation defines the actual project type. Therefore, it defines an ID, a name and some configuration options. As the ID is referenced from other classes, it is retrieved from a shared constant class `MyConstants`.
+自定义的 `ProjectTypeDef` 实现定义实际的项目类型。因此，它定义ID，名字，和一些配置选项。因为ID被其它的类引用，从共享的常量类 `MyConstants` 中获取。
 
-A custom `ProjectCreateHandler` is responsible for creating a new project of the custom type. As an example, it can create some default files on project creation. `ProjectCreateHandler` is a subtype of ProjectHandler, other sub types, e.g. `PostImportProjectHandler` and `ProjectInitHandler` provide further hooks to configure projects.
+自定义的 `ProjectCreateHandle` 负责为自定义类型创建新项目。作为实例，它在项目创建中创建一些缺省的文件。`ProjectCreateHandler` 是ProjectHandler的子类，其它的子类，例如 `PostImportProjectHandler` 和 `ProjectInitHandler` 提供进一步的钩子来配置项目。
 
-Both, the custom `ProjectTypeDef` as well as the custom `ProjectCreateHandler` are bound by a `GuiceModule` to make them available for the Che Framework. Please note that all these components are part of a server plugin. Necessary adaptations within the IDE, e.g. the extension of the "New" menu are done automatically by Che.
+自定义的 `ProjectTypeDef` 和自定义的 `ProjectCreateHandler` 被 `GuiceModule` 绑定在一起以使得它们对Che Framework是可用的。请注意所有这些组件都是服务器插件的组成部分。在IDE的必要的适应，如对“New”菜单的扩展由Che自动完成。
 
-As an example, we will describe in the following how to add a simple project type for managing JSON files, although in a real use case JSON files are usually embedded into other projects (e.g. a JavaScript project). We will also add a default initialization to the project type, which already creates a new JSON file in any created project.
+作为示例，我们在下面描述怎样增加一个简单项目类型以管理JSON文件，尽管在实际用例中JSON文件通常是被嵌入到其它的项目中(比如JavaScript项目)。我们也给项目类型添加缺省的初始化,在任何创建的项目中创建一个新JSON文件。
 
+第一步，我们实现一个自定义的 `ProjectTypeDef` 的子类（见下面的代码）。 它的构造器调用默认的父构造器为自定义项目类型定义ID和名称。
 As a first step, we implement a custom subclass of `ProjectTypeDef` (see code example below). Its constructor calls the default super constructor to define the ID and the name for the custom project type.
 
-Further, it specifies with the remaining three boolean parameters:
+下一步，通过其它的三个boolean参数指明：
 
-* **primary**=true: That the project can be a top-level project, meaning that it can be created on the root level of a workspace
-* **mixin**=false: That the project cannot be embedded into other projects (as sub-projects)
+* **primary**=true: 项目是顶层的项目，即项目被创建在工作空间的根层
+* **mixin**=false: 项目不可以被嵌入到其它的项目（作为子项目）
 
-After specifying the project, we add a constant and a variable definition to the project type. Constants can not be changed, once they are defined and therefore contain static information about the project type. In our example, we add the information, that the project’s language is "json". The first parameter specifies a key, the second a description of the Constant, and the third the corresponding value.
+在指定项目之后，我们向项目类型添加常量和变量定义。一旦定义了常量，并且因此包含关于项目类型的静态信息，就不能更改它们。在我们的示例中，我们添加信息，即项目的语言是“json”。第一个参数指定一个键，第二个参数指定常量的描述，第三个参数指定相应的值。
 
 https://github.com/che-samples/che-plugin-json/blob/master/plugins/plugin-myjson/plugin-myjson-server/src/main/java/it/pkg/projecttype/JsonExampleProjectType.java[JsonExampleProjectType.java]
 
@@ -54,8 +55,8 @@ public class JsonExampleProjectType extends ProjectTypeDef {
 }
 ----
 
-Variables can be changed, e.g. to store values that the user enters on project creation. In the example, we define a custom variable to store a reference to a JSON schema. We will allow the user to set this variable in a custom project wizard in the corresponding part of this tutorial. You can define your own variables to store project specific properties. All String constants of the following code example are defined in a shared constant class, which is listed below.
-
+变量能被改变，比如保存用户在创建项目时的输入值。在示例中，我定义自定义的变量保存对JSON schema的引用。我们将允许用户在本教程的相应部分中的自定义项目向导中设置此变量。您可以定义自己的变量来存储特定于项目的属性。以下代码示例的所有String常量都定义在共享常量类中，如下所示。
+ 
 https://github.com/che-samples/che-plugin-json/blob/master/plugins/plugin-myjson/plugin-myjson-shared/src/main/java/it/pkg/shared/Constants.java[Constants.java]
 
 [source,java]
@@ -93,7 +94,7 @@ public final class Constants {
 }
 ----
 
-To make our new project type available in Che, we need to register it using Guice. The following example code registers the `JsonExampleProjectType` from above as a `ProjectTypeDef`. Che will automatically pick up all bound `ProjectTypeDefs`. Please see our link:guice.html[Dependency Injection Basics] section for a general introduction of this mechanism.
+为了使我们的新项目类型在Che中可用，我们需要使用Guice注册它。下面的示例代码将上面的 `JsonExampleProjectType` 注册为 `ProjectTypeDef` 。Che将自动捡取所有绑定的项目类型 `ProjectTypeDefs`。请参阅我们的 link:guice.html[依赖注入基础]部分，以获得该机制的一般介绍。
 
 [source,java]
 ----
@@ -110,13 +111,13 @@ public class JsonExampleGuiceModule extends AbstractModule {
 }
 ----
 
-By defining the new project type, Che will add a new entry in the "New" menu of the IDE and allow us to create a new and empty project:
+通过定义新的项目类型，Che将在IDE的“New”菜单中添加一个新条目，并允许我们创建一个新的空项目：
 
 image::devel/wizard.png[]
 
-Typical project types often need to be initialized with some default content, e.g. some files. This can be done by implementing a `CreateProjectHandler` (subtype of `ProjectHandler`). In the method `#onProjectCreate`, you can access the base folder, as well as the attributes and options of the project.
+典型的项目类型通常需要用一些默认内容初始化，例如一些文件。这可以通过实现一个 `CreateProjectHandler` (`ProjectHandler` 子类型)来实现。在 `#onProjectCreate` 方法中，可以访问基础文件夹以及项目的属性和选项。
 
-In the following example, we will create the following files: a "person.json" file with some default content that will be stored in a folder named "myJsonFiles" as well as a "package.json" file, which we’ll need later on. The method `#getProjectType` needs to provide the project type ID to allow Che to map the `ProjectHandler` to the correct type.
+在下面的示例中，我们将创建以下文件：一个带有一些默认内容的"person.json"文件，该文件将存储在名为“myJsonFiles”的文件夹中，以及一个“package.json”文件，稍后我们将需要该文件。`#getProjectType` 方法需要提供项目类型ID，以允许Che将 `ProjectHandler`映射到正确的类型。
 
 https://github.com/che-samples/che-plugin-json/blob/master/plugins/plugin-myjson/plugin-myjson-server/src/main/java/it/pkg/inject/JsonExampleGuiceModule.java[JsonExampleGuiceModule.java]
 
@@ -154,7 +155,7 @@ public class JsonExampleCreateProjectHandler implements CreateProjectHandler {
 }
 ----
 
-Finally, the ProjectHandler needs to be bound using Guice just as the project type was bound before:
+最后，ProjectHandler需要通过Guice绑定就像我们之前绑定project类型一样：
 
 https://github.com/che-samples/che-plugin-json/blob/master/plugins/plugin-myjson/plugin-myjson-server/src/main/java/it/pkg/inject/JsonExampleGuiceModule.java[JsonExampleGuiceModule.java]
 
@@ -167,30 +168,30 @@ projectHandlerMultibinder.addBinding().to(JsonExampleCreateProjectHandler.class)
 /...
 ----
 
-Once the ProjectHandler has been added and executed, the example project will already contain the files in the IDE.
+一旦ProjectHandler被添加和执行了，示例项目将已经包含IDE中的文件
 
 [id="project-creation-wizard"]
-== Project Creation Wizard
+== 项目创建向导
 
-Project creation wizards are executed once the user creates a new project. They allow you to enter general properties (such as a name and a description), but also project-specific properties (e.g. a compiler option, a project dependency, etc.). Without providing a specific project creation wizard, Che already allows you to enter the general properties available for all projects as shown in the following screenshot for the JSON example project type we have defined in the previous section of the tutorial.
+在用户创建新项目时，项目创建向导就被执行。它们允许您输入一般属性（例如名称和描述），但也可以输入特定于项目的属性（例如，编译器选项、项目依赖项等）。在不提供特定的项目创建向导的情况下，Che已经允许您输入所有项目可用的一般属性，如下面的屏幕截图所示，用于我们在本教程的前一节中定义的JSON示例项目类型。
 
-In this section, we will describe how to extend the default project creation wizard with a new page allowing it to enter an additional property. As part of the JSON example, we will allow the user to enter the URL of a JSON Schema. We will later use the schema to validate JSON files on the server. Therefore, we will add a new page to the JSON project creation wizard allowing to enter the schema url property:
+在本节中，我们将描述如何用允许其输入附加属性的新页面扩展默认项目创建向导。作为JSON示例的一部分，我们将允许用户输入JSON Schema 的URL。稍后我们将使用该schema来验证服务器上的JSON文件。因此，我们将向JSON项目创建向导添加一个新页面，允许输入schem url属性：
 
 image::devel/schema.png[]
 
-This page serves as a simple example, it can be adapted for any other project specific property.
+这个页面作为一个简单的例子，它可以适用于任何其他项目特有的属性。
 
-The following diagram shows all components for the extension of the project wizard. The classes highlighted in dark grey are to be implemented for the project wizards extension.
+下面的图表显示了项目向导扩展的所有组件。深灰色中突出显示的是项目向导扩展的类。
 
 image::devel/ProjectType-JsonExample.png[]
 
-Before we look at the detailed implementations, we will first give an overview of all participating components. As a first step, we need to implement a `ProjectWizardRegistrar`. It holds a set of `AbstractWizardPages`. These pages are added to the default wizard and displayed during project creation. Our implementation of a `ProjectWizardRegistrar` is in `JsonExampleProjectWizardRegistrar` and contributes one wizard page (see its method `#getWizardPages`) which will contain exactly one field for entering a JSON schema URL.
+在研究详细的实现之前，我们将首先给出所有相关组件的概述。作为第一步，我们需要实现一个 `ProjectWizardRegistrar`。它持有一组 `AbstractWizardPages`。这些页被添加到默认向导中，并在项目创建期间显示。我们的 `ProjectWizardRegistrar` 实现在 `JsonExampleProjectWizardRegistrar`中，并提供一个向导页面（参见其方法 `#getWizardPages`），该页面将恰好包含用于输入JSON schema URL的一个字段。
 
-The page itself is implemented in `SchemaUrlWizardPage`. To actually display a UI, it configures a GWT view defined in `SchemaUrlPageViewImpl` and its corresponding `SchemaUrlPageViewImpl.ui.xml`. Furthermore, the wizard page will create and configure a handler for URL changes called `SchemaUrlChangedDelegate`.
+页面本身在 `SchemaUrlWizardPage` 中实现。为了实际显示UI，它在 `SchemaUrlPageViewImpl` 中定义的GWT视图及其对应的 `SchemaUrlPageViewImpl.ui.xml`。此外，向导页面将创建并配置名为 `SchemaUrlChangedDelegate`的处理程序用于对URL的修改。
 
-Now all required classes are set up and the actual runtime behavior can be performed. Whenever the user performs a change in the textbox for the schema URL, GWT will trigger the method `#onSchemaUrlChanged` in `SchemaUrlPageViewImpl` since it is annotated as a handler for changes on this textbox. The method will then notify the `SchemaUrlChangedDelegate`. The `SchemaUrlChangedDelegate` will in turn write the changed URL into a `ProjectConfigDto` owned by the `SchemaUrlWizardPage`.
+现在，所有必需的类都被设置，并且实际的运行时行为是可执行。每当用户对Schema URL的文本框执行更改时，GWT将触发 `SchemaUrlPageViewImpl` 中的 `#onSchemaUrlChanged` 方法，因为它被注释为该文本框上的更改处理程序。然后，该方法将通知 `SchemaUrlChangedDelegate`。 `SchemaUrlChangedDelegate` 将把更改后的URL写入 `SchemaUrlWizardPage`所拥有的 `ProjectConfigDto` 。
 
-Finally, to wire everything up with Gin, all we need to do is to define a module to register our class `JsonExampleProjectWizardRegistrar` as an implementation of `ProjectWizardRegistrar`:
+最后，为了将一切与Gin连接起来，我们需要做的就是定义一个模块来把类 `JsonExampleProjectWizardRegistrar` 注册为 `ProjectWizardRegistrar` 的实现。
 
 https://github.com/che-samples/che-plugin-json/blob/master/plugins/plugin-myjson/plugin-myjson-ide/src/main/java/it/pkg/ide/inject/JsonExampleModule.java[JsonExampleModule.java]
 
@@ -210,11 +211,13 @@ public class JsonExampleModule extends AbstractGinModule {
 }
 ----
 
-Now let us look at the implementation of all required classes in more detail.
+现在让我们更详细地了解所有需要的类的实现。
+
+`JsonExampleProjectWizardRegistrar` 负责将 `SchemaUrlWizardPage` 设置为其向导页面之一。为此，它请求一个提供者，在其构造函数中注入 `SchemaUrlWizardPage` 。提供者只是Che框架所需的实际向导页面的包装器。在方法 `#getWizardPages` 中，我们可以只返回向导页面的提供者列表，其中只包含注入的提供者。
 
 The `JsonExampleProjectWizardRegistrar` is responsible for setting up the `SchemaUrlWizardPage` as one of its wizard pages. To do this, it requests a provider for a `SchemaUrlWizardPage` injected in its constructor. The provider is just a wrapper around the actual wizard page which is required by the Che framework. In the method `#getWizardPages` we can then just return a list of providers for wizard pages containing only the injected provider.
 
-In addition to setting up the wizard page we need to declare the project type and category for which the project wizard is responsible for.
+除了设置向导页面之外，我们还需要声明项目向导负责的项目类型和类别。
 
 https://github.com/che-samples/che-plugin-json/blob/master/plugins/plugin-myjson/plugin-myjson-ide/src/main/java/it/pkg/ide/project/JsonExampleProjectWizardRegistrar.java[JsonExampleProjectWizardRegistrar.java]
 
