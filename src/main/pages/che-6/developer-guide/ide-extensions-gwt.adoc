@@ -1,5 +1,5 @@
 ---
-title: "IDE Extensions: GWT"
+title: "IDE 扩展: GWT"
 keywords: framework, extensions, gwt, client side
 tags: [extensions, assembly, dev-docs]
 sidebar: che_6_docs
@@ -10,9 +10,9 @@ folder: che-6/developer-guide
 
 
 [id="ide-extension-structure"]
-== IDE Extension Structure
+== IDE 扩展结构
 
-Let’s take a closer look at how an IDE extension should be structured:
+让我们仔细查看一个IDE扩展应该有什么样的结构：
 
 ----
 ide
@@ -38,20 +38,20 @@ ide
 └─ pom.xml
 ----
 
-Links: https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html[1] https://tbroyer.github.io/gwt-maven-plugin/generate-module-metadata-mojo.html[2] https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html[3]
+链接: https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html[1] https://tbroyer.github.io/gwt-maven-plugin/generate-module-metadata-mojo.html[2] https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html[3]
 
 [id="pom.xml"]
 == pom.xml
 
-There are several important parts in the pom.xml of the Che IDE plugin:
+在Che IDE插件的pom.xml中有几个重要的部分：
 
-* Packaging of the Maven project is `gwt-lib` which triggers https://tbroyer.github.io/gwt-maven-plugin/lifecycles.html#GWT_Library:_gwt-lib[`gwt-lib`] Maven lifecycle that will build a https://tbroyer.github.io/gwt-maven-plugin/artifact-handlers.html#GWT_Library:_gwt-lib[GWT library]:
+* Maven 项目的packaging类型是 `gwt-lib` ,它触发 Maven https://tbroyer.github.io/gwt-maven-plugin/lifecycles.html#GWT_Library:_gwt-lib[`gwt-lib`] 生命周期，构建出一个 https://tbroyer.github.io/gwt-maven-plugin/artifact-handlers.html#GWT_Library:_gwt-lib[GWT library]：
 +
 [source,xml]
 ----
 <packaging>gwt-lib</packaging>
 ----
-* Dependency on the Che IDE API library that provides a https://docs.google.com/spreadsheets/d/1ijapDnl1G7svy7sIKgTntyTuVsnd9nFcH0-357C0MxE/edit#gid=0[set of APIs] for extending Che IDE:
+* 依赖于Che IDE API库，提供一个 https://docs.google.com/spreadsheets/d/1ijapDnl1G7svy7sIKgTntyTuVsnd9nFcH0-357C0MxE/edit#gid=0[API集合] 用于扩展Che IDE：
 +
 [source,xml]
 ----
@@ -60,7 +60,7 @@ There are several important parts in the pom.xml of the Che IDE plugin:
     <artifactId>che-core-ide-api</artifactId>
 </dependency>
 ----
-* Name of the GWT module is defined in the configuration of `gwt-maven-plugin`:
+* GWT模块的名字在  `gwt-maven-plugin` 的 `configuration` 中定义：
 +
 [source,xml]
 ----
@@ -74,14 +74,14 @@ There are several important parts in the pom.xml of the Che IDE plugin:
 </plugin>
 ----
 +
-For details on the generating GWT module, read the `gwt:generate-module` https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html[mojo description]. GWT library is a JAR that contains compiled classes, project’s (re-)sources, GWT module descriptor (`*.gwt.xml`) and possibly other GWT-specific files.
+更多关于生成GWT模块的内容，请阅读 `gwt:generate-module` https://tbroyer.github.io/gwt-maven-plugin/generate-module-mojo.html[mojo description]。GWT 库是一个JAR,它包含着编译类，项目的资源，GWT模块描述符，和可能的其它的某些GWT相关文件。
 
 [id="gwt.xml"]
 == gwt.xml
 
-Project’s `*.gwt.xml` file is generated within the `gwt-lib` Maven lifecycle and contains:
+项目的 `*.gwt.xml` 文件产生在 `gwt-lib` 的Maven生命周期，包含：
 
-* the declarations for the default source folders:
+* 对缺省的源代码文件夹的声明：
 +
 [source,xml]
 ----
@@ -89,33 +89,33 @@ Project’s `*.gwt.xml` file is generated within the `gwt-lib` Maven lifecycle a
 <source path="shared"/>
 <super-source path="super"/>
 ----
-* `<inherits/>` directives for the project’s _direct_ dependencies which were packaged as a `gwt-lib`.
+* `<inherits/>` 指令用于项目的 _直接_ 依赖项，它们被打包成一个 `gwt-lib`。
 
-_Optional_ template may be provided in `src/main/module.gwt.xml` for generating project’s `*.gwt.xml` file.
+_可选的_ 模板可在 `src/main/module.gwt.xml` 中提供以生成项目的 `*.gwt.xml` 文件。
 
-The most common cases when you may require a template:
+你可能需要一个模板的最通常的情况是：
 
-* need to override the default source folders, like https://github.com/eclipse/che/blob/f15fbf1cb1248d18acc3ee6fdc41766946ea4a3b/plugins/plugin-java/che-plugin-java-ext-lang-client/src/main/module.gwt.xml#L18[here];
-* need to add `<inherits/>` directive for a GWT lib that isn’t packaged as a `gwt-lib` artifact (doesn’t contain GWT-specific meta information).
+* 需要重载缺省的源代码文件夹, 比如 https://github.com/eclipse/che/blob/f15fbf1cb1248d18acc3ee6fdc41766946ea4a3b/plugins/plugin-java/che-plugin-java-ext-lang-client/src/main/module.gwt.xml#L18[这]；
+* 需要增加 `<inherits/>` directive 给不打包为 `gwt-lib` 工件的GWT库 (不包含GWT相关的元信息)。
 
 [id="consuming-shared-libs"]
-== Consuming Shared Libs
+== 使用共享库
 
-The shared libraries don’t require any GWT-specific files or configuration in pom.xml to be consumed by a GWT library.
+共享库不需要任何在pom.xml中的GWT特定文件和配置被GWT库使用。
 
-To use shared code in a GWT library:
+要使用GWT库中共享的代码：
 
-* declare a dependency on the "normal" artifact (JAR with compiled classes);
-* declare a dependency on the "sources" artifact (with `<classifier>sources</classifier>`).
+* 声明对"normal"工件的依赖（带编译类的JAR）
+* 声明对"sources"的依赖（通过`<classifier>sources</classifier>`）。
 
-See an example https://github.com/eclipse/che/blob/19f5fd1f5ae8f165b7306e71cb0d58c2082fafab/plugins/plugin-python/che-plugin-python-lang-ide/pom.xml#L49-L57[here].
+参考示例见 https://github.com/eclipse/che/blob/19f5fd1f5ae8f165b7306e71cb0d58c2082fafab/plugins/plugin-python/che-plugin-python-lang-ide/pom.xml#L49-L57[这].
 
 [id="ide-extension-class"]
-== IDE extension class
+== IDE 扩展类
 
-Che IDE plugin has an entry point - Java class annotated with an https://github.com/eclipse/che/blob/master/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/extension/Extension.java[`@org.eclipse.che.ide.api.extension.Extension`] annotation. Plugin entry point is called immediately after initializing the core part of the Che IDE.
+Che IDE 插件有一个入口 - 使用 https://github.com/eclipse/che/blob/master/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/extension/Extension.java[`@org.eclipse.che.ide.api.extension.Extension`] 注解的Java类。插件入口在完成Che IDE的核心部分的初始化后立即被调用。
 
-Here’s an entry point of the plugin that will add a new top level menu group using link:actions.html[IDE actions]:
+这里是一个插件的入口，它使用 link:actions.html[IDE actions]增加一个新的顶层菜单组：
 
 [source,java]
 ----
@@ -154,11 +154,12 @@ public class SampleMenuExtension {
 ----
 
 [id="dependency-injection"]
-== Dependency Injection
+== 依赖注入
 
-Che IDE use https://code.google.com/archive/p/google-gin/[Google GIN] for dependency injection. Che IDE plugin can provide a GIN module. In order to be picked-up by IDE, plugin’s GIN module should be annotated with an https://github.com/eclipse/che/blob/master/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/extension/ExtensionGinModule.java[`@org.eclipse.che.ide.api.extension.ExtensionGinModule`] annotation.
+Che IDE使用 https://code.google.com/archive/p/google-gin/[Google GIN] 进行依赖注入。Che IDE插件提供GIN模块。插件的GIN模块需要使用 https://github.com/eclipse/che/blob/master/ide/che-core-ide-api/src/main/java/org/eclipse/che/ide/api/extension/ExtensionGinModule.java[`@org.eclipse.che.ide.api.extension.ExtensionGinModule`] 标记进行注解以便能被IDE找到。
 
-Here’s a GIN module of the plugin:
+
+这里是一个插件的GIN模块
 
 [source,java]
 ----
@@ -175,38 +176,38 @@ public class SampleMenuGinModule extends AbstractGinModule {
 }
 ----
 
-In this example an extension GIN module isn’t really necessary since the plugin does not really need to put anything in a container. Read more about link:guice.html[dependency injection] and take a look at https://github.com/eclipse/che/blob/master/plugins/plugin-csharp/che-plugin-csharp-lang-ide/src/main/java/org/eclipse/che/plugin/csharp/ide/inject/CSharpGinModule.java[example Gin modules].
+在这个示例中因为插件不真的需要放任何东西到容器中，所以并不真的需要扩展的GIN模块。更多内容请阅读 link:guice.html[依赖注入] 和  https://github.com/eclipse/che/blob/master/plugins/plugin-csharp/che-plugin-csharp-lang-ide/src/main/java/org/eclipse/che/plugin/csharp/ide/inject/CSharpGinModule.java[Gin 模块示例]。
 
 [id="extension-points"]
-== Extension Points
+== 扩展点
 
-You can provide or customize existing link:actions.html[actions], link:parts.html[parts], link:themes.html[themes] and link:editor.html[editor]. This example has registered a new action.
+你可以提供或自定义已有的 link:actions.html[actions], link:parts.html[parts], link:themes.html[themes] 和 link:editor.html[editor]. 这个示例注册了一个新的action。
 
 [id="debugging-with-super-devmode"]
-== Debugging With Super DevMode
+== 使用Super DevMode调试
 
-There are two options available to launch GWT Super DevMode, depending on the state of the Che sources: whether it’s built or not since a lot of sources are generated during the Maven build.
+有两种可以选的方式启动GWT Super DevMode，依赖Che源代码的状态：是否构建过，因为一些源代码是在Maven的构建过程中产生的。
 
-* Case 1: Che sources have been already built. Use the following command:
+* Case 1: Che 源代码已经被构建。使用下面的命令：
 
 `mvn gwt:codeserver -pl :che-ide-gwt-app -am -Dmaven.main.skip -Dmaven.resources.skip -Dche.dto.skip -Dskip-enforce -Dskip-validate-sources`
 
-* Case 2: Che sources haven’t been built, e.g. freshly cloned or after executing `mvn clean` or you just don’t need to build the whole project. Use the following command:
+* Case 2: Che 源代码尚没有被构建，例如，刚刚被clone的代码或刚执行了 `mvn clean` 或你仅不需要构建整个项目。使用下面的命令：
 
 `mvn gwt:codeserver -pl :che-ide-gwt-app -am -Dskip-enforce -Dskip-validate-sources`
 
-The second one requires _more time_ to launch GWT CodeServer since it executes `process-classes` build phase for each maven module. Thus, using the first command is preferable.
+第二个命令需要 _更多时间_ 启动GWT 代码服务(CodeServer)因为它为每个maven模块执行 `process-class` 构建阶段。因此，尽量优先使用第一个命令吧。 
 
-*Note*, both commands have to be performed in the root folder of the Che project.
+*注意*, 两个命令都必须要在Che的项目根目录下执行。
 
-Once codeserver is started, open the prompted URL, drag bookmarks on your bookmarks bar. Note that you may face the error saying there are no GWT modules on the page. It happens because the IDE is opened in an iframe. Just, cut `dashboard/#/ide/` from the URL. To debug client side code, follow instructions from link:che-in-che-quickstart.html#develop-and-debug-client-side[quickstart].
+一旦代码服务启动了，打开提示的URL，把标签拖到你的标签条上。注意你可能会遇到错误提示说在这个页面中没有GWT模块。这是因为IDE是在iframe里打开的。仅仅需要，从url中剪切掉 `dashboard/#/ide`。要调试客户端代码，要遵照的说明参见 link:che-in-che-quickstart.html#develop-and-debug-client-side[快速入门]。
 
 [id="run-in-che"]
-== Run in Che
+== 在Che里运行
 
-Once your extension is ready, you can build, run and debug it in link:che-in-che-quickstart.html[Che itself]. Just use an existing sample and add a custom plugin with its dependencies.
+一旦你的扩展就绪，你可以构建，运行和调试它在 link:che-in-che-quickstart.html[Che自身内]。只是使用一个已有的示例和增加带有所有依赖项的自定义插件。
 
 [id="add-to-a-custom-assembly"]
-== Add to a Custom Assembly
+== 增加一个自定义的程序集
 
-You can build your custom link:assemblies.html[Che assembly] outside Che and/or use any IDE to develop extensions. Once done, run `mvn clean install` in the root of the assembly to get a Tomcat bundle that is ready to be run either in link:docker-config.html#development-mode[Docker] or deployed to link:openshift-config.html#development-mode[OpenShift].
+你可以在Che外和/或使用任何的IDE构建你自定义的 link:assemblies.html[Che程序集]以开发扩展。一旦完成，在assembly根目录下运行 `mvn clean install`，生成一个Tomcat集束(bundle)，直接地可以把它用于在 link:docker-config.html#development-mode[Docker] 或 link:openshift-config.html#development-mode[OpenShift]上部署。
