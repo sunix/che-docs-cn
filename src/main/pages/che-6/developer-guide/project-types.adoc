@@ -250,7 +250,7 @@ public class JsonExampleProjectWizardRegistrar implements ProjectWizardRegistrar
 }
 ----
 
-The `SchemaUrlWizardPage` class defines the actual wizard page for entering a schema URL. In the constructor it requires the injection of a view for displaying the UI of the page called `SchemaUrlPageViewImpl`. In the method `#go`, which is called when the page is about to be displayed, it will set this view as the only widget on the page and pass a new `SchemaUrlChangedDelegate` to the view. The view will later use this delegate to trigger changes on the page’s `ProjectConfigDto` whenever something is entered into the schema URL text box on the view.
+类 `SchemaUrlWizardPage` 定义了用于输入架构URL的实际向导页。在构造函数中，它需要注入一个视图来显示名为 `SchemaUrlPageViewImpl` 的页面的UI。在页面即将显示时调用的方法 `#go` 中，它将设置此视图为页面上唯一的小部件，并向视图传递新的 `SchemaUrlChangedDelegate` 。视图稍后将使用这个委托来触发页面的 `ProjectConfigDto` 上的更改，只要在视图的schema URL文本框中输入了某些内容。
 
 https://github.com/che-samples/che-plugin-json/blob/master/plugins/plugin-myjson/plugin-myjson-ide/src/main/java/it/pkg/ide/project/SchemaUrlWizardPage.java[SchemaUrlWizardPage.java]
 
@@ -274,7 +274,7 @@ public class SchemaUrlWizardPage extends AbstractWizardPage<ProjectConfigDto> {
 }
 ----
 
-The `SchemaUrlChangedDelegate` receives a `ProjectConfigDto` in its constructor which holds all the values that are defined during project creation including the schema URL. Whenever its `#schemaUrlChanged` method is fired, it will write the new value into the `ProjectConfigDto`.
+在 `SchemaUrlChangedDelegate` 的构造函数中接收一个 `ProjectConfigDto` ，它保存在项目创建期间定义的所有值，包括schema URL。每当触发其 `#schemaUrlChanged` 方法时，它将把新值写入 `ProjectConfigDto` 。
 
 https://github.com/che-samples/che-plugin-json/blob/master/plugins/plugin-myjson/plugin-myjson-ide/src/main/java/it/pkg/ide/project/SchemaUrlChangedDelegate.java[SchemaUrlChangedDelegate.java]
 
@@ -295,7 +295,8 @@ public class SchemaUrlChangedDelegate {
 }
 ----
 
-`SchemaUrlPageView` is just a marker interface required by the framework to declare that our `SchemaUrlPageViewImpl` is an implementation of a view with a `SchemaUrlChangedDelegate`.
+
+`SchemaUrlPageView` 只是一个框架需要的标记接口，用于声明我们的 `SchemaUrlPageViewImpl` 是具有 `SchemaUrlChangedDelegate` 的视图的实现。
 
 https://github.com/che-samples/che-plugin-json/blob/master/plugins/plugin-myjson/plugin-myjson-ide/src/main/java/it/pkg/ide/project/SchemaUrlPageView.java[SchemaUrlPageView.java]
 
