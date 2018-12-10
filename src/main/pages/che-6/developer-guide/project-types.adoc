@@ -18,20 +18,19 @@ folder: che-6/developer-guide
 [id="custom-project-type"]
 == 自定义项目类型
 
-这部分我们描述怎样定义新的自定义的项目类型包括项目的初始化（如：增加新的内容）。下面的图例展现了项目类型注册的所有组件。以暗灰色标注的类是为扩展需要实现的部分。
+这部分我们描述怎样定义新的自定义的项目类型包括项目的初始化（如：增加新的内容）。下面的图例展现了项目类型注册的所有组件。以暗灰色强调的类是为扩展需要实现的部分。
 
 image::devel/ProjectType.png[]
 
-自定义的 `ProjectTypeDef` 实现定义实际的项目类型。因此，它定义ID，名字，和一些配置选项。因为ID被其它的类引用，从共享的常量类 `MyConstants` 中获取。
+自定义的 `ProjectTypeDef` 实现定义实际的项目类型。因此，它定义ID，名字，和一些配置选项。在ID被其它的类引用时时，可以从共享的常量类 `MyConstants` 中获取。
 
 自定义的 `ProjectCreateHandle` 负责为自定义类型创建新项目。作为实例，它在项目创建中创建一些缺省的文件。`ProjectCreateHandler` 是ProjectHandler的子类，其它的子类，例如 `PostImportProjectHandler` 和 `ProjectInitHandler` 提供进一步的钩子来配置项目。
 
 自定义的 `ProjectTypeDef` 和自定义的 `ProjectCreateHandler` 被 `GuiceModule` 绑定在一起以使得它们对Che Framework是可用的。请注意所有这些组件都是服务器插件的组成部分。在IDE的必要的适应，如对“New”菜单的扩展由Che自动完成。
 
-作为示例，我们在下面描述怎样增加一个简单项目类型以管理JSON文件，尽管在实际用例中JSON文件通常是被嵌入到其它的项目中(比如JavaScript项目)。我们也给项目类型添加缺省的初始化,在任何创建的项目中创建一个新JSON文件。
+作为示例，我们在下面描述怎样增加一个简单项目类型以管理JSON文件，尽管在实际用例中JSON文件通常是被嵌入到其它的项目中(比如JavaScript项目)。我们也给项目类型添加缺省的初始化，在任何创建的项目中创建一个新JSON文件。
 
 第一步，我们实现一个自定义的 `ProjectTypeDef` 的子类（见下面的代码）。 它的构造器调用默认的父构造器为自定义项目类型定义ID和名称。
-As a first step, we implement a custom subclass of `ProjectTypeDef` (see code example below). Its constructor calls the default super constructor to define the ID and the name for the custom project type.
 
 下一步，通过其它的三个boolean参数指明：
 
@@ -215,8 +214,6 @@ public class JsonExampleModule extends AbstractGinModule {
 
 `JsonExampleProjectWizardRegistrar` 负责将 `SchemaUrlWizardPage` 设置为其向导页面之一。为此，它请求一个提供者，在其构造函数中注入 `SchemaUrlWizardPage` 。提供者只是Che框架所需的实际向导页面的包装器。在方法 `#getWizardPages` 中，我们可以只返回向导页面的提供者列表，其中只包含注入的提供者。
 
-The `JsonExampleProjectWizardRegistrar` is responsible for setting up the `SchemaUrlWizardPage` as one of its wizard pages. To do this, it requests a provider for a `SchemaUrlWizardPage` injected in its constructor. The provider is just a wrapper around the actual wizard page which is required by the Che framework. In the method `#getWizardPages` we can then just return a list of providers for wizard pages containing only the injected provider.
-
 除了设置向导页面之外，我们还需要声明项目向导负责的项目类型和类别。
 
 https://github.com/che-samples/che-plugin-json/blob/master/plugins/plugin-myjson/plugin-myjson-ide/src/main/java/it/pkg/ide/project/JsonExampleProjectWizardRegistrar.java[JsonExampleProjectWizardRegistrar.java]
@@ -305,9 +302,10 @@ https://github.com/che-samples/che-plugin-json/blob/master/plugins/plugin-myjson
 public interface SchemaUrlPageView extends View<SchemaUrlChangedDelegate> {}
 ----
 
-`SchemaUrlPageViewImpl` is the class which will actually create the UI with a TextBox for entering the schema URL. It is a GWT Composite with its contents defined in `SchemaUrlPageViewImpl.ui.xml`. To receive all changes of the schema URL in the UI it declares a method `#onSchemaUrlChanged` with an annotation @UiHandler("schemaUrl"). This annotation defines that the method is to be called whenever the text in the schemaUrl text box as defined in `SchemaUrlPageViewImpl.ui.xml` is changed. The method will just forward any call to the `SchemaUrlChangedDelegate` which was configured earlier by the `SchemaUrlWizardPage`. In its constructor the view gets a `JsonExamplePageViewUiBinder` injected which is used to create and bind the UI defined in `SchemaUrlPageViewImpl.ui.xml`. This requires you to define `JsonExamplePageViewUiBinder` as a marker interface extending `UiBinder<DockLayoutPanel, SchemaUrlPageViewImpl>`.
+`SchemaUrlPageViewImpl` 类用于实际创建有输入 schema URL 的文本框的UI。它是一个GWT复合体，其内容定义在 `SchemaUrlPageViewImpl.ui.xml`。为了接收UI中schema URL的所有更改，它声明了一个方法  `#onSchemaUrlChanged` ，带有注释 @UiHandler("schemaUrl")。此注释定义的方法，在每当 `SchemaUrlPageViewImpl.ui.xml` 中定义的schema Url文本框中的文本发生更改时，都要被调用。该方法仅把任何调用转发到 `SchemaUrlChangedDelegate` ，而这是先前由 `SchemaUrlWizardPage` 配置的。在其构造函数中，视图将获得用于注入的 `JsonExamplePageViewUiBinder`，它被用于创建和绑定在 `SchemaUrlPageViewImpl.ui.xml` 中定义的UI。这要求您将 `JsonExamplePageViewUiBinder` 定义为扩展 `UiBinder<DockLayoutPanel, SchemaUrlPageViewImpl>` 的标记接口。
 
-More about declarative UIs with GWT UI binder can be found on the http://www.gwtproject.org/doc/latest/DevGuideUiBinder.html[GWT homepage].
+
+更多关于使用GWT UI绑定器(binder)声明性UI的信息，可参考 http://www.gwtproject.org/doc/latest/DevGuideUiBinder.html[GWT主页]。
 
 https://github.com/che-samples/che-plugin-json/blob/master/plugins/plugin-myjson/plugin-myjson-ide/src/main/java/it/pkg/ide/project/SchemaUrlPageViewImpl.java[SchemaUrlPageViewImpl.java]
 
@@ -365,11 +363,11 @@ SchemaUrlPageViewImpl.ui.xml
 </ui:UiBinder>
 ----
 
-By adapting the `SchemaUrlPageViewImpl.ui.xml` you can customize the layout of the final wizard page.
+通过调整 `SchemaUrlPageViewImpl.ui.xml` ，你能定制最后的向导页的布局。
 
 [id="project-specific-actions"]
-== Project-specific Actions
+== 为项目特定的Actions
 
-Actions allow you to add custom behavior to the Che IDE. They can be placed in menus, toolbars or context menus. Some actions shall only be available on a specific project type. In the JSON example, we place two actions in the context menu of the defined project type. The screenshot shows a project-specific `HelloWorldAction`, as well as another project specific action.
+Actions允许你增加自定义的行为到Che IDE中。它们可以被放置在菜单，工具条，或环境菜单中。一些actions应仅对特定的项目类型可用。在JSON示例中，我们在定义的项目类型的环境菜单中设置了两个action。截屏显示了为项目特定的 `HelloWorldAction`，以及另一个项目特定的action。
 
 image::devel/json-example.png[]
