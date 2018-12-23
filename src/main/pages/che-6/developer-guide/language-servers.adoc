@@ -60,27 +60,28 @@ folder: che-6/developer-guide
 
 需注意的事情是：
 
-* *REGEX* defines regexp for desired files. It can be a path, all fines with certain extension or particular file names etc.
-* *launchScript* is usually created by an installer script and contains command(s) to launch a language server in a stdio mode
-* *LANGUAGE_ID* is defined in a guice module. See: https://github.com/eclipse/che/blob/master/plugins/plugin-clangd/che-plugin-clangd-lang-server/src/main/java/org/eclipse/plugin/clangd/inject/ClangModule.java[ClangdModule]
-* add binding in https://github.com/eclipse/che/blob/master/plugins/plugin-clangd/che-plugin-clangd-lang-server/src/main/java/org/eclipse/plugin/clangd/inject/ClangModule.java#L37[guice module]
+* *REGEX* 为所需的文件定义regexp。它可以是一个路径、带有特定扩展名或特定文件名的所有内容等等。
+* *launchScript* 通常由安装程序脚本创建，并包含以stdio模式启动语言服务器的命令
+* *LANGUAGE_ID* 在 guice 模块中定义。 见: https://github.com/eclipse/che/blob/master/plugins/plugin-clangd/che-plugin-clangd-lang-server/src/main/java/org/eclipse/plugin/clangd/inject/ClangModule.java[ClangdModule]
+* 在 https://github.com/eclipse/che/blob/master/plugins/plugin-clangd/che-plugin-clangd-lang-server/src/main/java/org/eclipse/plugin/clangd/inject/ClangModule.java#L37[guice module] 中增加绑定
 
-Installers are packaged into wsmaster, so you will need to add required dependencies there. LanguageServerConfigs are usually part of plugins packages with a workspace agent.
+安装程序被打包到wsmaster，因此您需要在那里添加所需的依赖项。LanguageServerConfigs通常是带有工作空间代理的插件包的一部分。
 
 [id="ls-sidecars"]
 == LS-Sidecars
 
-While the above approach works well for custom assemblies, i.e. you actually need to rebuild Che with a custom plugin that registers a new installer and a language server launcher, there is a mechanism to launch Language Servers in parallel containers/sidecars. This is what you need to do to add a new language server to your workspace as a sidecar.
+虽然上述方法适用于定制程序集，即您实际上需要重新构建Che以及注册新安装程序的定制插件和语言服务器启动程序，但是存在一种在并行容器/sidecar中启动语言服务器的机制。这是您需要做的，以便将新的语言服务器以并行的方式(sidecar模式)添加到您的工作空间。
 
-* Build a Docker image in which language server is started in `ENTRYPOINT` or `CMD`. Note that some language servers support `tcp` arguments in their start syntax. Make sure that the language server acts like a server, rather than attempts to bind to a socket. The best way to check it is to run the image: `docker run -ti ${image}`. If the container starts, everything is fine, and if it exits immediately, you need to fix it.
+* 构建一个Docker映像，其中语言服务器在 `ENTRYPOINT` 或 `CMD` 中启动。注意，一些语言服务器在其启动语法中支持 `tcp` 参数。确保语言服务器像服务器一样工作，而不是试图绑定到套接字。检查它的最佳方法是运行映像：`docker run-ti${image}`。如果容器启动，一切正常，如果它立即退出，则需要修复它。
 
-We recommend running language servers in `stdio` mode and use sockat as a proxy. Here’s an example of a Dockerfile that builds an image with TyperScript language server:
+
+我们建议以 `stdio` 模式运行语言服务器，并使用socket作为代理。下面是使用TyperScript语言服务器构建图像的Dockerfile的示例：
 
 ----
 # inherit an image with node.js and npm - runtime requirements for TypeScript LS
 FROM eclipse/node
 
-# install socat
+# 安装 socat
 RUN sudo apt-get install socat -y && \
     sudo npm install -g typescript@2.5.3 typescript-language-server@0.1.4
 
@@ -88,7 +89,7 @@ RUN sudo apt-get install socat -y && \
 CMD socat TCP4-LISTEN:4417,reuseaddr,fork EXEC:"typescript-language-server --stdio"
 ----
 
-* Create a stack with a link:creating-starting-workspaces.html[custom recipe]: Create Workspace > Add Stack:
+* 通过自定义的清单（link:creating-starting-workspaces.html[custom recipe]）创建栈：Create Workspace > Add Stack:
 
 [source,yaml]
 ----
@@ -103,7 +104,7 @@ services:
    - typescript-ls-machine
 ----
 
-* In User Dashboard, go to *Workspaces > Your Workspace > Config*, and add a server for typescript-ls-machine in `servers:[]`
+* 在用户的仪表盘，进入 *Workspaces > Your Workspace > Config*, 为 typescript-ls-machine 增加服务到 `servers:[]`
 
 [source,json]
 ----
@@ -121,8 +122,8 @@ services:
 }
 ----
 
-* *ls* - server name - can be any string
-* *attributes.id* - can be any unique identifier
+* *ls* - 服务器名称 - 可以是任何文本串
+* *attributes.id* - 可以是任何的唯一标识
 * *attributes.internal* - `true`. Mandatory! Used to get an internal link to server
 * *attributes.type* - `ls`. Mandatory. Used by the IDE client to identify a server as a language server
 * *languageRegexes.languageId* - language identifier, either one of those supported in [LSP specification] (https://microsoft.github.io/language-server-protocol/specification#textdocumentitem) or own.
