@@ -1,5 +1,5 @@
 ---
-title: "Language Support"
+title: "语言支持"
 keywords: framework, language servers, code assistant, language support, code completion, error marking
 tags: [extensions, assembly, dev-docs]
 sidebar: che_6_docs
@@ -10,38 +10,40 @@ folder: che-6/developer-guide
 
 
 [id="overview"]
-== Overview
+== 概览
 
-The Language Server Protocol is used between a tool (the client) and a language intelligence provider (the server) to integrate features like auto complete, goto definition, find references, etc.
+语言服务器协议在工具（客户端）和语言智能提供者（服务器）之间用于集成诸如自动完成、goto定义、查找引用等特性。  
 
-You can learn more about the language server specification on the https://github.com/Microsoft/language-server-protocol[LSP GitHub page].
 
-Currently Eclipse Che implements the https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md[3.x protocol version].
+你能从 https://github.com/Microsoft/language-server-protocol[LSP GitHub page] 了解更多关于语言服务器协议规格的内容。 
+ 
 
-Note that, Eclipse Che also implements the snippet syntax used in VSCode. It is not versioned in the LSP specification, but the supported syntax is described https://github.com/Microsoft/vscode/blob/0ebd01213a65231f0af8187acaf264243629e4dc/src/vs/editor/contrib/snippet/browser/snippet.md[here].
+目前 Eclipse Che 实现了 https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md[3.x protocol version]。
+
+注意，Eclipse Che还实现了VSCode中使用的片段语法。LSP规范中没有对它形成版本，但是在 https://github.com/Microsoft/vscode/blob/0ebd01213a65231f0af8187acaf264243629e4dc/src/vs/editor/contrib/snippet/browser/snippet.md[这里] 描述了所支持的语法。
 
 [id="adding-support-for-new-languages"]
-== Adding Support for New Languages
+== 增加对新语言的支持
 
-There are two approaches to add a new language server:
+有两种途径用于增加一种新的语言服务器：  
 
-* via installer and launcher: this way a language server runs in the machine where the respective installer has been enabled
-* adding link:#ls-sidecars[language server as a sidecar] in workspace configuration - multi-machine recipe + server with required attributes
+* 通过安装程序(installer)和启动程序(launcher): 这种方式语言服务器运行在对应安装程序(installer)已经可用的机器上。
+* 在工作空间配置中增加link:#ls-sidecars[language server as a sidecar] - 多服务器清单 + 带有需要属性的服务器
 
 [id="general-concept"]
-== General Concept
+== 通用概念
 
-Language server integration is divided into 2 steps: an install followed by a separately triggered start. Language servers aren’t started when the agent starts. Instead they are started in a second step which can be triggered at any time. This is done to reduce resource consumption and reduce workspace startup time.
+语言服务器集成分为两个步骤：安装后再单独触发启动。当代理启动时，不会启动语言服务器。相反，它们是在第二步中启动的，可以在任何时候触发。这样做是为了减少资源消耗和减少工作空间启动时间。
 
-1.  The language server agent is launched when the workspace starts - its job is to install all dependencies and prepare the `bash` launcher file that will be used to start the language server.
-2.  The https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver/src/main/java/org/eclipse/che/api/languageserver/launcher/LanguageServerLauncher.java[launcher] is triggered and starts the language server. We suggest triggering the launcher when the user begins interacting with file types related to the language server. Once launched, the language server is registered with specific file types (covered in more detail below).
+1.  语言服务器代理在工作空间启动时被启动 - 其作用是安装所有的依赖项和准备将用于启动语言服务器的 `bash` 启动文件。
+2.  https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver/src/main/java/org/eclipse/che/api/languageserver/launcher/LanguageServerLauncher.java[启动程序(lancher)]被触发并启动语言服务器。我们建议在用户开始操作与语言服务器相关的文件类型时再触发启动。一旦完成启动，语言服务器与特定的文件类型(详见后文)一起被注册。
 
 [id="adding-a-language-server-installer"]
-== Adding a Language Server Installer
+== 增加语言服务器安装程序(Installer)
 
-Follow the documentation on how to link:custom-installers.html[add new installer].
+按照有关文档完成 link:custom-installers.html[增加新的安装程序]
 
-Examples of existed language server agents you can learn from:
+你能从已有的语言服务器代理的示例中进行学习：
 
 * https://github.com/eclipse/che/tree/master/agents/ls-json[JSON]
 * https://github.com/eclipse/che/tree/master/agents/ls-php[PHP]
@@ -50,13 +52,13 @@ Examples of existed language server agents you can learn from:
 * https://github.com/eclipse/che/tree/master/agents/ls-typescript[TypeScript]
 
 [id="adding-a-language-server-config"]
-== Adding a Language Server Config
+== 增加一个语言服务器的配置
 
-In order to start/initialize a language server for the desired language, you need to implement https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver/src/main/java/org/eclipse/che/api/languageserver/LanguageServerConfig.java[LanguageServerConfig interface] which pretty much defines what needs to be accomplished to start a 'local' language server.
+为了启动/初始化某预定的语言的语言服务器，你需要实现 https://github.com/eclipse/che/blob/master/wsagent/che-core-api-languageserver/src/main/java/org/eclipse/che/api/languageserver/LanguageServerConfig.java[LanguageServerConfig interface] ,它完整定义了启动一个 `local` 语言服务器所需要完成的事情。
 
-Here is how a typical LanguageServerConfig looks like: https://github.com/eclipse/che/blob/master/plugins/plugin-clangd/che-plugin-clangd-lang-server/src/main/java/org/eclipse/plugin/clangd/languageserver/ClangDLanguageServerConfig.java[Clangd].
+这是一个典型的LanguageServerConfig，它看上去应该像 https://github.com/eclipse/che/blob/master/plugins/plugin-clangd/che-plugin-clangd-lang-server/src/main/java/org/eclipse/plugin/clangd/languageserver/ClangDLanguageServerConfig.java[Clangd] 这样。
 
-Things to pay attention to:
+需注意的事情是：
 
 * *REGEX* defines regexp for desired files. It can be a path, all fines with certain extension or particular file names etc.
 * *launchScript* is usually created by an installer script and contains command(s) to launch a language server in a stdio mode
