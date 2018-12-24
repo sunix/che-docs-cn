@@ -124,14 +124,15 @@ services:
 
 * *ls* - 服务器名称 - 可以是任何文本串
 * *attributes.id* - 可以是任何的唯一标识
-* *attributes.internal* - `true`. Mandatory! Used to get an internal link to server
-* *attributes.type* - `ls`. Mandatory. Used by the IDE client to identify a server as a language server
-* *languageRegexes.languageId* - language identifier, either one of those supported in [LSP specification] (https://microsoft.github.io/language-server-protocol/specification#textdocumentitem) or own.
-* *languageRegexes.regex* - regexp expression to match either extension or file name + extension, or whatever match you need (for example, path, say, initialize language server only for config/config.xml files). Pay attention to regexp syntax since errors are not validated by server, and bad regexp will result in the client ignoring your files.
-* In User Dashboard, go to Workspaces > Your Workspace > Volumes, add a volume for *each machine*. The two volumes have to share the same name (for example, `projects`) and path `/projects` so that they actually share one volume. This way a language server container has access to workspace project types.
+* *attributes.internal* - `true`. 必须项。用于获取到服务器的内部链接
+* *attributes.type* - `ls`. 必须项。IDE客户端用于将服务器标识为语言服务器
+* *languageRegexes.languageId* - 语言标识符，或者是 link:https://microsoft.github.io/language-server-protocol/specification#textdocumentitem[LSP specification] 中所支持其一或者是自身。
+* *languageRegexes.regex* - regexp表达式匹配扩展名或文件名+扩展名，或任何您需要的匹配(for example, path, say, initialize language server only for config/config.xml  files)。请注意regexp语法，因为服务器不会验证错误，而糟糕的regexp将导致客户端忽略文件。
+
+* 在用户仪表盘，进入 Workspaces > Your Workspace > Volumes， 为 *每个机器* 增加一个存储卷。两个卷需要使用相同的名字(比如，`projects`) 和path `/projects`  以便他们实际上共享一个存储卷。这样，语言服务器容器能访问到工作空间的项目类型(project types)。
 
 image::extensibility/lang_servers/volumes_ls.png[]
 
-* Start a workspace. Open a file with one of the extensions bound to a language ID. Che client will attempt to connect to language server over tcp socket. This data is retrieved from workspace runtime. Language server process should be available at the port declared in the server. You can either use Socat or launch a language server in tcp mode if it supports it. It is your Docker image’s responsibility to launch the language server. Adding `ENTRYPOINT` or `CMD` instruction should work well.
+* 启动工作空间。打开某项扩展与语言ID绑定的文件。Che客户端将尝试通过tcp socket与语言服务器建立连接。数据从工作空间运行时中获取。语言服务器进程应该在服务器定义的端口上可访问。可以使用Socat或如果支持以tcp方式启动语言服务器。Docker 镜像负责启动语言服务器。增加 `ENTRYPOINT` or `CMD` 指令应该运行正常。
 
-See: https://gist.githubusercontent.com/eivantsov/4e86b4d51cf23fbd8fd68410170f06e3/raw/e9c1edc600d0ff82e15d2d68d2ac5c6304a981b9/go-workspace.json[Sample configuration] of a workspace featuring 2 machines, one of which is a language server machine.
+见: 有两个机器的 https://gist.githubusercontent.com/eivantsov/4e86b4d51cf23fbd8fd68410170f06e3/raw/e9c1edc600d0ff82e15d2d68d2ac5c6304a981b9/go-workspace.json[示例配置] ，其中之一是语言服务器机器。
